@@ -1,0 +1,13 @@
+{
+  "name": "emochat",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "client": "cd client && npm run dev",
+    "server": "cd server && npm run dev",
+    "ts": "cd server && npm run wch"
+  },
+  "author": "",
+  "license": "ISC"
+}

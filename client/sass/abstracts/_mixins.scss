@@ -1,0 +1,30 @@
+@mixin flex-center($justify-type: center, $align-type: center)
+ {
+    display: flex;
+    justify-content: $justify-type;
+    align-items: $align-type;
+}
+
+@mixin position-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+@mixin convert-to-header($font-size: $title-header-font) {
+    margin: 10px 0 20px 0;
+    font-size: $font-size;
+    color: $title-header-color;
+    z-index: 100;
+}
+
+@mixin defaultInput ($input-width, $input-height) {
+    width: $input-width;
+    height: $input-height;
+
+    margin: 10px 0 10px 0;
+    font-family: $default-font;
+    padding-left: 10px;
+    border-radius: 5px;
+}

@@ -1,0 +1,24 @@
+#main-action-button{
+    padding: 0.8rem 3rem 0.8rem 3rem;
+    border-radius: 500px;
+    background-color: $theme-color;
+
+    @include flex-center(space-evenly);
+    color: white;
+    text-decoration: none;
+    svg{
+        margin-right: 15px;
+    }
+
+}
+
+#main-action-button:disabled {
+    cursor: not-allowed;
+    background-color: rgb(92, 92, 92);
+    color: white;
+    box-shadow: 0px 0px 15px rgb(92, 92, 92);
+
+}
+#main-action-button:hover{
+    background-color: $theme-color-light;
+}
