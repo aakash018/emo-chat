@@ -1,6 +1,7 @@
 import express from "express"
 import jwt from "jsonwebtoken";
 import passport from "passport";
+import { validateUser } from "../utils/verifyUser";
 import { User } from "../entities/Users";
 import { createRefToken, createToken } from "../utils/json_generator";
 // import { User } from "src/entities/Users";
@@ -33,21 +34,24 @@ route.get('/google/callback',
 
     });
 
+route.get("/google/failure", (_, res) => {
+    return res.send("Failed")
+})
+
+
 route.get('/getToken', async (req, res) => {
     const token = req.cookies.ref
-    console.log(req.headers)
-    console.log(token)
     if (!token) {
         return res.json({ ok: false, message: "No Token Found" })
     }
 
     try {
-        const payload: any = jwt.verify(token, "dfdxcvsdfedfd")
-        // console.log(payload)
+        const payload = jwt.verify(token, process.env.REF_JWT_TOKEN) as IRefToken //? Ref Token
         if (payload) {
             const user = await User.findOne({ where: { id: payload.userID } })
             if (user) {
                 return res.json({
+                    ok: true,
                     token: createToken(user)
                 })
             }
@@ -55,15 +59,17 @@ route.get('/getToken', async (req, res) => {
             return res.json({ ok: false, message: "Error validating token" })
         }
     } catch (e) {
-        console.log("JWT Ref error", e)
         return res.json({ ok: false, message: "Unknown error !!" })
     }
-
-
 })
 
-route.get("/google/failure", (_, res) => {
-    return res.send("Failed")
+
+
+
+//! TEST
+
+route.post("/test", validateUser, (_, res) => {
+    return res.send("Ok! You get a pass")
 })
 
 

@@ -22,6 +22,7 @@ const Dash: React.FC = () => {
             const res = await axios.get<{ token: string }>("http://localhost:5000/auth/getToken", {
                 withCredentials: true
             })
+            console.log(res.data)
             if (!res.data.token) {
                 router.push("/")
             } else {
@@ -39,9 +40,16 @@ const Dash: React.FC = () => {
         })()
     }, [])
 
+
+    const handleCheck = async () => {
+        const res = await axios.post("http://localhost:5000/auth/test", { token: localStorage.getItem("token") })
+        console.log(res.data)
+    }
+
     return (
         <div>
             This is dash board. <h1 style={{ color: "white" }}>{currentUser?.displayName}</h1>
+            <button onClick={handleCheck}>TEST</button>
         </div>
     )
 }

@@ -19,6 +19,8 @@ const passport_1 = __importDefault(require("passport"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 require("./config/passport");
 require("reflect-metadata");
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
 const auth_1 = __importDefault(require("./api/auth"));
 const typeorm_1 = require("typeorm");
 const Users_1 = require("./entities/Users");

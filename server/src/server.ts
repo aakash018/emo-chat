@@ -12,6 +12,9 @@ import passport from "passport"
 import cookieParser from "cookie-parser"
 import "./config/passport"
 import "reflect-metadata"
+import dotenv from "dotenv"
+
+dotenv.config()
 
 //*Route
 import auth from './api/auth'

@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const passport_1 = __importDefault(require("passport"));
+const verifyUser_1 = require("../utils/verifyUser");
 const Users_1 = require("../entities/Users");
 const json_generator_1 = require("../utils/json_generator");
 const route = express_1.default();
@@ -35,19 +36,21 @@ route.get('/google/callback', passport_1.default.authenticate('google', {
         res.redirect("http://localhost:3000/dash");
     }
 }));
+route.get("/google/failure", (_, res) => {
+    return res.send("Failed");
+});
 route.get('/getToken', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const token = req.cookies.ref;
-    console.log(req.headers);
-    console.log(token);
     if (!token) {
         return res.json({ ok: false, message: "No Token Found" });
     }
     try {
-        const payload = jsonwebtoken_1.default.verify(token, "dfdxcvsdfedfd");
+        const payload = jsonwebtoken_1.default.verify(token, process.env.REF_JWT_TOKEN);
         if (payload) {
             const user = yield Users_1.User.findOne({ where: { id: payload.userID } });
             if (user) {
                 return res.json({
+                    ok: true,
                     token: json_generator_1.createToken(user)
                 });
             }
@@ -57,12 +60,11 @@ route.get('/getToken', (req, res) => __awaiter(void 0, void 0, void 0, function*
         }
     }
     catch (e) {
-        console.log("JWT Ref error", e);
         return res.json({ ok: false, message: "Unknown error !!" });
     }
 }));
-route.get("/google/failure", (_, res) => {
-    return res.send("Failed");
+route.post("/test", verifyUser_1.validateUser, (_, res) => {
+    return res.send("Ok! You get a pass");
 });
 exports.default = route;
 //# sourceMappingURL=auth.js.map
