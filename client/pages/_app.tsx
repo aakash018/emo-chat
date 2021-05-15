@@ -4,7 +4,7 @@ import '../sass/sass_imports.scss'
 import '../sass/globals.scss'
 
 
-function MyApp({ Component, pageProps }: AppProps) {
+const MyApp = ({ Component, pageProps }: AppProps) => {
   return (
     <UserProvider>
       <Component {...pageProps} />

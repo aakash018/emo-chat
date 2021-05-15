@@ -1,4 +1,10 @@
 declare interface IUser {
-    username: string,
-    roomID: string
+    id: string,
+    firstName: string,
+    secondName: string,
+    email: string,
+    displayName: string,
+    picture: string,
+    createdAt: number,
+    updatedAt: number
 }

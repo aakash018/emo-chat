@@ -16,14 +16,17 @@ const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const http_1 = __importDefault(require("http"));
 const passport_1 = __importDefault(require("passport"));
+const cookie_parser_1 = __importDefault(require("cookie-parser"));
 require("./config/passport");
 require("reflect-metadata");
 const auth_1 = __importDefault(require("./api/auth"));
 const typeorm_1 = require("typeorm");
 const Users_1 = require("./entities/Users");
 const app = express_1.default();
+app.use(cookie_parser_1.default());
 app.use(cors_1.default({
-    origin: "http://localhost:3000"
+    origin: "http://localhost:3000",
+    credentials: true
 }));
 const server = http_1.default.createServer(app);
 const PORT = process.env.PORT || 5000;
@@ -37,7 +40,7 @@ const PORT = process.env.PORT || 5000;
         database: "emochat",
         entities: [Users_1.User],
         synchronize: true,
-        logging: true,
+        logging: false,
     }).then(_ => {
         console.log("Connected To PSQL");
     }).catch(error => console.log(error));
