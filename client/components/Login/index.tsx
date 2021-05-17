@@ -4,7 +4,7 @@ import { FaGoogle } from "react-icons/fa"
 import style from "./style.module.scss"
 
 
-const Login = () => {
+const Login: React.FC<{ disable: boolean }> = ({ disable }) => {
 
     const handleLogin = () => {
         window.location.href = "http://localhost:5000/auth/google"
@@ -17,7 +17,7 @@ const Login = () => {
                 <span className={style.welcomeText__welcome} >Welcome To <h3>EmoChat</h3></span>
             </div>
             <div className={style.loginButton}>
-                <MainButton type="button" onClick={handleLogin}>
+                <MainButton type="button" onClick={handleLogin} disable={disable}>
                     <FaGoogle /> Login with Google
                 </MainButton>
             </div>

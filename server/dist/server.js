@@ -17,13 +17,16 @@ const cors_1 = __importDefault(require("cors"));
 const http_1 = __importDefault(require("http"));
 const passport_1 = __importDefault(require("passport"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
+const socket_io_1 = require("socket.io");
 require("./config/passport");
 require("reflect-metadata");
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const auth_1 = __importDefault(require("./api/auth"));
+const room_1 = __importDefault(require("./api/room"));
 const typeorm_1 = require("typeorm");
 const Users_1 = require("./entities/Users");
+const Rooms_1 = require("./entities/Rooms");
 const app = express_1.default();
 app.use(cookie_parser_1.default());
 app.use(cors_1.default({
@@ -40,17 +43,36 @@ const PORT = process.env.PORT || 5000;
         username: "postgres",
         password: "Thisisme@123",
         database: "emochat",
-        entities: [Users_1.User],
+        entities: [Users_1.User, Rooms_1.Room],
         synchronize: true,
-        logging: false,
+        logging: true,
     }).then(_ => {
         console.log("Connected To PSQL");
     }).catch(error => console.log(error));
 }))();
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: false }));
+const io = new socket_io_1.Server(server, {
+    cors: {
+        origin: "http://localhost:3000",
+        methods: ["GET", "POST"]
+    }
+});
+io.on("connection", (socket) => {
+    console.log("user connected");
+    socket.on("message", (msg) => {
+        console.log(msg);
+        io.to(msg.roomID).emit("message", { username: msg.username, message: msg.message, sendAt: msg.sendAt });
+    });
+    socket.on("join", (data) => {
+        socket.join(data.id);
+        socket.join(data.userID);
+        io.to(data.userID).emit("joined", { ok: true, id: data.id });
+    });
+});
 app.use(passport_1.default.initialize());
 app.use("/auth", auth_1.default);
+app.use("/api/room", room_1.default);
 app.get("/", (_, res) => {
     res.send(`Server running at: ${PORT}`);
 });

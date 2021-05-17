@@ -1,17 +1,18 @@
 // import { useUser } from "context/user"
 
-import axios from "axios"
+
 import { useRouter } from "next/router"
-import { useEffect } from "react"
-import jwt_decode from "jwt-decode";
+import { useEffect } from "react";
+import Image from "next/image"
+import Head from "next/head"
 import { useUser } from "context/user";
+import style from "../sass/dash.module.scss"
+import UserProfile from "components/UserProfile";
+import { refreshToken } from "utils/refresh_token";
+import ChatContainer from "components/ChatContainer";
+import RoomContainer from "components/RoomsContainer";
 
-interface IJWT {
-    user: IUser,
-    iat: number,
-    exp: number
 
-}
 
 const Dash: React.FC = () => {
     const router = useRouter()
@@ -19,38 +20,48 @@ const Dash: React.FC = () => {
 
     useEffect(() => {
         (async () => {
-            const res = await axios.get<{ token: string }>("http://localhost:5000/auth/getToken", {
-                withCredentials: true
-            })
-            console.log(res.data)
-            if (!res.data.token) {
-                router.push("/")
-            } else {
-                localStorage.setItem("token", res.data.token)
-                const decoded: IJWT = jwt_decode(res.data.token);
+            if (!currentUser?.id) {
+                console.log("Ran")
+                const decoded = await refreshToken()
                 console.log(decoded)
-                const { user } = decoded
-
-                //! Bad Code, I KNOW
-
-                if (setCurrentUser) {
-                    setCurrentUser(user)
+                if (decoded) {
+                    const { user } = decoded
+                    if (setCurrentUser) {
+                        setCurrentUser(user)
+                    }
+                } else {
+                    router.push("/")
                 }
             }
         })()
     }, [])
 
-
-    const handleCheck = async () => {
-        const res = await axios.post("http://localhost:5000/auth/test", { token: localStorage.getItem("token") })
-        console.log(res.data)
-    }
-
     return (
-        <div>
-            This is dash board. <h1 style={{ color: "white" }}>{currentUser?.displayName}</h1>
-            <button onClick={handleCheck}>TEST</button>
-        </div>
+        <>
+            <Head>
+                <title>EmoChat</title>
+            </Head>
+            <div className={style.dash}>
+                {currentUser?.picture &&
+
+                    <div className={style.dash__head}>
+                        <div className={style.logo}>
+                            <Image src="/assets/logo.svg" alt="logo" width="50px" height="50px" />
+                            <h1>EmoChat</h1>
+                        </div>
+                        <UserProfile picture={currentUser!.picture} displayName={currentUser!.displayName} />
+                    </div>
+                }
+                <div className="main">
+
+                </div>
+                <div className={style.body}>
+                    <RoomContainer />
+                    <ChatContainer />
+                </div>
+
+            </div>
+        </>
     )
 }
 
