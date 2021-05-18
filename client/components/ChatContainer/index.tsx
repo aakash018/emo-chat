@@ -1,30 +1,35 @@
 import MainButton from 'components/MainButton'
 import { useUser } from 'context/user'
+import { getCurrentRoom, setCurrentRoom } from 'libs/room'
 import React, { FormEvent, useEffect, useRef, useState } from 'react'
 import socket from 'socket'
 import style from "./style.module.scss"
+
+interface ISocketJoined {
+    ok: boolean,
+    id: string
+}
+
+interface ISocketMessage {
+    username: string,
+    message: string
+}
+
+
 const ChatContainer = () => {
 
     const messageInput = useRef<HTMLInputElement>(null)
     const { currentUser } = useUser()
-    const roomID = useRef(null)
 
 
     useEffect(() => {
-        socket.on("message", (m) => {
-            console.log(m)
-            // setMessageList(prev => prev.concat(m))
+        socket.on("message", (data: ISocketMessage) => {
+            console.log(data)
         })
 
-        socket.on("dis", (m) => {
-            console.log(m)
-        })
-        socket.on("con", (m) => {
-            console.log(m)
-        })
-        socket.on("joined", (m) => {
-            console.log(m)
-            roomID.current = m.id
+        socket.on("joined", (data: ISocketJoined) => {
+            console.log(data)
+            setCurrentRoom(data.id)
         })
         return () => {
             socket.disconnect()
@@ -37,7 +42,7 @@ const ChatContainer = () => {
         e.preventDefault()
         const info = {
             username: currentUser?.firstName,
-            roomID: roomID.current,
+            roomID: getCurrentRoom(),
             message: messageInput.current?.value,
         }
 

@@ -32,3 +32,17 @@ button{
     font-family: "Poppins";
     font-size: 1.2rem;
 }
+
+input {
+    border:none;
+    color: white;
+    padding-left: 10px;
+    font-family: 'Poppins';
+    &:focus{
+        outline: 2px solid $theme-color-lighter;
+    }
+}
+
+label{
+    display: block;
+}

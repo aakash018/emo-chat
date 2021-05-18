@@ -8,7 +8,7 @@ const route = express()
 route.post("/add", async (req, res) => {
     const { creator, serverName }: { creator: string, serverName: string } = req.body
     try {
-        await getConnection()
+        const result = await getConnection()
             .createQueryBuilder()
             .insert()
             .into(Room)
@@ -19,7 +19,11 @@ route.post("/add", async (req, res) => {
                 }
             )
             .execute();
-        res.send("Done")
+        const newRoom = await Room.findOne({ id: result.identifiers[0].id })
+        res.json({
+            ok: true,
+            room: newRoom
+        })
 
     } catch (e) {
         console.log(e)

@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, BaseEntity } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, BaseEntity, OneToMany } from "typeorm";
+import { Message } from "./message";
 
 @Entity()
 export class Room extends BaseEntity {
@@ -11,6 +12,9 @@ export class Room extends BaseEntity {
 
     @Column()
     owner: string;
+
+    @OneToMany(() => Message, message => message.room)
+    messages: Message[];
 
     @CreateDateColumn()
     createdAt: Date;

@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import Image from "next/image"
 import Head from "next/head"
 import { useUser } from "context/user";
+import RoomProvider from "context/room"
 import style from "../sass/dash.module.scss"
 import UserProfile from "components/UserProfile";
 import { refreshToken } from "utils/refresh_token";
@@ -21,9 +22,7 @@ const Dash: React.FC = () => {
     useEffect(() => {
         (async () => {
             if (!currentUser?.id) {
-                console.log("Ran")
                 const decoded = await refreshToken()
-                console.log(decoded)
                 if (decoded) {
                     const { user } = decoded
                     if (setCurrentUser) {
@@ -56,8 +55,10 @@ const Dash: React.FC = () => {
 
                 </div>
                 <div className={style.body}>
-                    <RoomContainer />
-                    <ChatContainer />
+                    <RoomProvider>
+                        <RoomContainer />
+                        <ChatContainer />
+                    </RoomProvider>
                 </div>
 
             </div>

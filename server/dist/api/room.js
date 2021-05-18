@@ -19,7 +19,7 @@ const route = express_1.default();
 route.post("/add", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { creator, serverName } = req.body;
     try {
-        yield typeorm_1.getConnection()
+        const result = yield typeorm_1.getConnection()
             .createQueryBuilder()
             .insert()
             .into(Rooms_1.Room)
@@ -28,7 +28,11 @@ route.post("/add", (req, res) => __awaiter(void 0, void 0, void 0, function* () 
             owner: creator,
         })
             .execute();
-        res.send("Done");
+        const newRoom = yield Rooms_1.Room.findOne({ id: result.identifiers[0].id });
+        res.json({
+            ok: true,
+            room: newRoom
+        });
     }
     catch (e) {
         console.log(e);

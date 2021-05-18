@@ -27,6 +27,7 @@ const room_1 = __importDefault(require("./api/room"));
 const typeorm_1 = require("typeorm");
 const Users_1 = require("./entities/Users");
 const Rooms_1 = require("./entities/Rooms");
+const message_1 = require("./entities/message");
 const app = express_1.default();
 app.use(cookie_parser_1.default());
 app.use(cors_1.default({
@@ -43,12 +44,12 @@ const PORT = process.env.PORT || 5000;
         username: "postgres",
         password: "Thisisme@123",
         database: "emochat",
-        entities: [Users_1.User, Rooms_1.Room],
+        entities: [Users_1.User, Rooms_1.Room, message_1.Message],
         synchronize: true,
         logging: true,
-    }).then(_ => {
+    }).then((_) => __awaiter(void 0, void 0, void 0, function* () {
         console.log("Connected To PSQL");
-    }).catch(error => console.log(error));
+    })).catch(error => console.log(error));
 }))();
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: false }));
@@ -60,13 +61,20 @@ const io = new socket_io_1.Server(server, {
 });
 io.on("connection", (socket) => {
     console.log("user connected");
-    socket.on("message", (msg) => {
-        console.log(msg);
-        io.to(msg.roomID).emit("message", { username: msg.username, message: msg.message, sendAt: msg.sendAt });
-    });
+    socket.on("message", (msg) => __awaiter(void 0, void 0, void 0, function* () {
+        io.to(msg.roomID).emit("message", { username: msg.username, message: msg.message });
+        yield message_1.Message.create({
+            message: msg.message,
+            writtenBy: msg.username,
+            roomID: msg.roomID
+        }).save();
+    }));
     socket.on("join", (data) => {
         socket.join(data.id);
         socket.join(data.userID);
+        if (data.currentRoom) {
+            socket.leave(data.currentRoom);
+        }
         io.to(data.userID).emit("joined", { ok: true, id: data.id });
     });
 });
