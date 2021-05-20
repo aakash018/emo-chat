@@ -7,9 +7,9 @@ import cookieParser from "cookie-parser"
 import { Server } from "socket.io"
 import "./config/passport"
 import "reflect-metadata"
-import dotenv from "dotenv"
+// import * as dotenv from "dotenv"
 
-dotenv.config()
+// dotenv.config()
 
 // Route
 import auth from './api/auth'
@@ -20,12 +20,13 @@ import { createConnection } from "typeorm"
 import { User } from "./entities/Users"
 import { Room } from "./entities/Rooms"
 import { Message } from "./entities/message"
+import { Joined } from "./entities/Joined"
 
 
 const app = express()
 app.use(cookieParser())
 app.use(cors({
-    origin: "http://localhost:3000",
+    origin: process.env.CLIENT_END_POINT,
     credentials: true
 }))
 const server = http.createServer(app);
@@ -42,18 +43,25 @@ const PORT = process.env.PORT || 5000;
         username: "postgres",
         password: "Thisisme@123",
         database: "emochat",
-        entities: [User, Room, Message],
+        entities: [User, Room, Message, Joined],
         synchronize: true,
         logging: true,
-    }).then(async _ => {
+
+    }).then(async (_) => {
         console.log("Connected To PSQL")
+        // await Joined.delete({})
         // await Message.delete({})
         // await Room.delete({})
+        // await User.delete({})
 
-        // const room = await connection.getRepository(Room).find({ relations: ["messages"] })
 
-        // console.log(room[0].messages)
 
+        // const user = await _.getRepository(User)
+        //     .createQueryBuilder("user")
+        //     .where("user.displayName LIKE :name", { name: `%${"_"}%` })
+        //     .getMany()
+
+        // console.log(user)
     }).catch(error => console.log(error));
 })();
 
@@ -66,7 +74,7 @@ app.use(express.urlencoded({ extended: false }));
 // SocketsINIT
 const io = new Server(server, {
     cors: {
-        origin: "http://localhost:3000",
+        origin: process.env.CLIENT_END_POINT,
         methods: ["GET", "POST"]
     }
 })
@@ -89,6 +97,7 @@ io.on("connection", (socket) => {
     })
 
     socket.on("join", (data: ISocketJoinPayload) => {
+        console.log("ram")
         socket.join(data.id);
         socket.join(data.userID)
         if (data.currentRoom) {

@@ -4,7 +4,7 @@ import passport from "passport";
 import { validateUser } from "../utils/verifyUser";
 import { User } from "../entities/Users";
 import { createRefToken, createToken } from "../utils/json_generator";
-// import { User } from "src/entities/Users";
+
 
 
 const route = express()
@@ -29,7 +29,7 @@ route.get('/google/callback',
                 httpOnly: true,
                 maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
             })
-            res.redirect("http://localhost:3000/dash")
+            res.redirect(`${process.env.CLIENT_END_POINT}/dash`)
         }
 
     });
@@ -41,6 +41,8 @@ route.get("/google/failure", (_, res) => {
 
 route.get('/getToken', async (req, res) => {
     const token = req.cookies.ref
+
+    // If cookie tooken does not exists
     if (!token) {
         return res.json({ ok: false, message: "No Token Found" })
     }
@@ -49,12 +51,17 @@ route.get('/getToken', async (req, res) => {
         const payload = jwt.verify(token, process.env.REF_JWT_TOKEN) as IRefToken //? Ref Token
         if (payload) {
             const user = await User.findOne({ where: { id: payload.userID } })
+
+            // If user exists
             if (user) {
                 return res.json({
                     ok: true,
                     token: createToken(user)
                 })
+            } else {
+                return res.json({ ok: false, message: "User Not Found" })
             }
+            // If Ref Token is invalid
         } else {
             return res.json({ ok: false, message: "Error validating token" })
         }

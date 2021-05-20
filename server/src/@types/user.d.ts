@@ -8,3 +8,10 @@ declare interface IUser {
     createdAt: number,
     updatedAt: number
 }
+
+
+declare namespace Express {
+    export interface Request {
+        user?: IUser
+    }
+}

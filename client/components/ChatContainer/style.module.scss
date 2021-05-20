@@ -2,8 +2,52 @@
     width: 90vw;
     height: 75vh;
 
+    background-color: $theme-color-light;
+
+    border-radius: 20px;
+    @include flex-center(flex-start);
+
+    margin-right: 10px;
+}
+
+
+//* Chat Section
+.chat_section{
+
+    //! REMOVE
+    margin-left: 20px;
+
+    width: 80%;
+    height: 95%;
     background-color: $theme-color;
 
-    border: 15px solid $theme-color-light;
+    position: relative;
+
     border-radius: 20px;
+
+    form {
+        width: 100%;
+        @include flex-center;
+
+        button {
+            background-color: $secondary-theme-color;
+            height: 30px;
+            width: 70px;
+
+            font-size: 2.5rem;
+
+            border-bottom-right-radius: 20px;
+        }
+
+    }
+
+    input{
+        width: 90%;
+        height: 30px;
+
+        background-color: $theme-color-light;
+        border-bottom-left-radius: 20px;
+
+    }
+
 }

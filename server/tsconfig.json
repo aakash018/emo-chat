@@ -8,6 +8,10 @@
       "es2017",
       "esnext.asynciterable"
     ],
+    "typeRoots": [
+      "./node_modules/@types",
+      "./src/@types"
+    ],
     "sourceMap": true,
     "outDir": "./dist",
     "moduleResolution": "node",

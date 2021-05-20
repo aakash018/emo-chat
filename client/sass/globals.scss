@@ -34,15 +34,37 @@ button{
 }
 
 input {
+    outline: none;
     border:none;
     color: white;
-    padding-left: 10px;
+    padding-left: 20px;
     font-family: 'Poppins';
-    &:focus{
-        outline: 2px solid $theme-color-lighter;
-    }
+    // &:focus{
+    //     outline: 2px solid $theme-color-lighter;
+    // }
 }
 
 label{
     display: block;
 }
+
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: lighten($color: $theme-color, $amount: 12);
+  }
+  
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: lighten($color: $theme-color, $amount: 20) ;
+    border-radius: 500px;
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: lighten($color: $theme-color, $amount: 25);
+  }

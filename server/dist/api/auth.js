@@ -33,7 +33,7 @@ route.get('/google/callback', passport_1.default.authenticate('google', {
             httpOnly: true,
             maxAge: 1000 * 60 * 60 * 24 * 7,
         });
-        res.redirect("http://localhost:3000/dash");
+        res.redirect(`${process.env.CLIENT_END_POINT}/dash`);
     }
 }));
 route.get("/google/failure", (_, res) => {
@@ -53,6 +53,9 @@ route.get('/getToken', (req, res) => __awaiter(void 0, void 0, void 0, function*
                     ok: true,
                     token: json_generator_1.createToken(user)
                 });
+            }
+            else {
+                return res.json({ ok: false, message: "User Not Found" });
             }
         }
         else {

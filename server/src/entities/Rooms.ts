@@ -1,5 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, BaseEntity, OneToMany } from "typeorm";
+import { Joined } from "./Joined";
 import { Message } from "./message";
+
 
 @Entity()
 export class Room extends BaseEntity {
@@ -15,6 +17,13 @@ export class Room extends BaseEntity {
 
     @OneToMany(() => Message, message => message.room)
     messages: Message[];
+
+    @OneToMany(() => Joined, joined => joined.users)
+    users: Joined[]
+
+    // @ManyToMany(() => User, user => user.rooms)
+    // @JoinTable({ name: "userID" })
+    // users: User[];
 
     @CreateDateColumn()
     createdAt: Date;

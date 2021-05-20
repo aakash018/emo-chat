@@ -5,8 +5,8 @@
   "main": "server.ts",
   "scripts": {
     "wch": "tsc -w",
-    "dev": "nodemon ./dist/server.js",
-    "start": "node ./dist/server.js"
+    "dev": "nodemon -r dotenv/config ./dist/server.js",
+    "start": "node -r dotenv/config ./dist/server.js"
   },
   "author": "",
   "license": "ISC",

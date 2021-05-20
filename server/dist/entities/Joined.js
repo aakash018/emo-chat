@@ -9,42 +9,32 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Room = void 0;
+exports.Joined = void 0;
 const typeorm_1 = require("typeorm");
-const Joined_1 = require("./Joined");
-const message_1 = require("./message");
-let Room = class Room extends typeorm_1.BaseEntity {
+const Rooms_1 = require("./Rooms");
+const Users_1 = require("./Users");
+let Joined = class Joined extends typeorm_1.BaseEntity {
 };
 __decorate([
-    typeorm_1.PrimaryGeneratedColumn("uuid"),
+    typeorm_1.PrimaryColumn(),
     __metadata("design:type", String)
-], Room.prototype, "id", void 0);
+], Joined.prototype, "roomID", void 0);
 __decorate([
-    typeorm_1.Column(),
-    __metadata("design:type", String)
-], Room.prototype, "name", void 0);
-__decorate([
-    typeorm_1.Column(),
-    __metadata("design:type", String)
-], Room.prototype, "owner", void 0);
-__decorate([
-    typeorm_1.OneToMany(() => message_1.Message, message => message.room),
+    typeorm_1.ManyToOne(() => Rooms_1.Room, room => room.users),
+    typeorm_1.JoinColumn({ name: "roomID" }),
     __metadata("design:type", Array)
-], Room.prototype, "messages", void 0);
+], Joined.prototype, "users", void 0);
 __decorate([
-    typeorm_1.OneToMany(() => Joined_1.Joined, joined => joined.users),
+    typeorm_1.PrimaryColumn(),
+    __metadata("design:type", String)
+], Joined.prototype, "userID", void 0);
+__decorate([
+    typeorm_1.ManyToOne(() => Users_1.User, user => user.rooms),
+    typeorm_1.JoinColumn({ name: "userID" }),
     __metadata("design:type", Array)
-], Room.prototype, "users", void 0);
-__decorate([
-    typeorm_1.CreateDateColumn(),
-    __metadata("design:type", Date)
-], Room.prototype, "createdAt", void 0);
-__decorate([
-    typeorm_1.UpdateDateColumn(),
-    __metadata("design:type", Date)
-], Room.prototype, "updatedAt", void 0);
-Room = __decorate([
+], Joined.prototype, "rooms", void 0);
+Joined = __decorate([
     typeorm_1.Entity()
-], Room);
-exports.Room = Room;
-//# sourceMappingURL=Rooms.js.map
+], Joined);
+exports.Joined = Joined;
+//# sourceMappingURL=Joined.js.map

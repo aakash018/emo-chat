@@ -16,12 +16,14 @@ const Home = () => {
     useEffect(() => {
         (async () => {
             setLoading(true)
+            console.log("Ran")
             const decoded = await refreshToken()
             if (decoded) {
                 const { user } = decoded
                 if (setCurrentUser) {
                     setCurrentUser(user)
                 }
+                setLoading(false)
                 router.push("/dash")
             } else {
                 setLoading(false)

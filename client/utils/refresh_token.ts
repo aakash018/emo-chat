@@ -9,6 +9,7 @@ interface IJWT {
 }
 
 export const refreshToken = async () => {
+    console.log("This Ran")
     const res = await axios.get<{ token: string }>("http://localhost:5000/auth/getToken", {
         withCredentials: true
     })

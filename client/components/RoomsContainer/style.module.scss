@@ -41,51 +41,22 @@
     }
 }
 
-
-.makeRoom{
-    
-    @include flex-center;
-    
-    margin-top: 10px;
-
-    // position: absolute;
-    // bottom: 10px;
-    width: 100%;
-    
-
-    input {
-        background-color: $theme-color;
-        width: 75%;
-        height: 30px;
-
-        border-bottom-left-radius: 20px;
-    }
-
-    button{
-        width: 20%;
-        height: 30px;
-
-        border-bottom-right-radius: 20px;
-
-        background-color: $secondary-theme-color;
-        color: $theme-color;
-        font-size: 2rem;
-
-        @include flex-center;
-    }
-}
-
 .listRooms{
 
     width: 100%;
     height: 70%;
+    
+    overflow-y: auto;
+
+
 
     @include flex-center(flex-start, flex-end);
     flex-direction: column;
     gap: 20px;
     button{
         width: 85%;
-        height: 50px;
+
+        padding: 5px 0 5px 0;
 
         background-color: $theme-color;
         color: white;
@@ -118,5 +89,38 @@
             font-size: 0.8rem;
             align-self: flex-start;
         }
+    }
+}
+
+.makeRoom{
+    
+    @include flex-center;
+    
+    margin-top: 10px;
+
+    // position: absolute;
+    // bottom: 10px;
+    width: 100%;
+    
+
+    input {
+        background-color: $theme-color;
+        width: 75%;
+        height: 30px;
+
+        border-bottom-left-radius: 20px;
+    }
+
+    button{
+        width: 20%;
+        height: 30px;
+
+        border-bottom-right-radius: 20px;
+
+        background-color: $secondary-theme-color;
+        color: $theme-color;
+        font-size: 2rem;
+
+        @include flex-center;
     }
 }

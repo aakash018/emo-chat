@@ -22,6 +22,7 @@ const Dash: React.FC = () => {
     useEffect(() => {
         (async () => {
             if (!currentUser?.id) {
+                console.log("This Ran")
                 const decoded = await refreshToken()
                 if (decoded) {
                     const { user } = decoded

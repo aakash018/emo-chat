@@ -20,18 +20,17 @@ const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const socket_io_1 = require("socket.io");
 require("./config/passport");
 require("reflect-metadata");
-const dotenv_1 = __importDefault(require("dotenv"));
-dotenv_1.default.config();
 const auth_1 = __importDefault(require("./api/auth"));
 const room_1 = __importDefault(require("./api/room"));
 const typeorm_1 = require("typeorm");
 const Users_1 = require("./entities/Users");
 const Rooms_1 = require("./entities/Rooms");
 const message_1 = require("./entities/message");
+const Joined_1 = require("./entities/Joined");
 const app = express_1.default();
 app.use(cookie_parser_1.default());
 app.use(cors_1.default({
-    origin: "http://localhost:3000",
+    origin: process.env.CLIENT_END_POINT,
     credentials: true
 }));
 const server = http_1.default.createServer(app);
@@ -44,7 +43,7 @@ const PORT = process.env.PORT || 5000;
         username: "postgres",
         password: "Thisisme@123",
         database: "emochat",
-        entities: [Users_1.User, Rooms_1.Room, message_1.Message],
+        entities: [Users_1.User, Rooms_1.Room, message_1.Message, Joined_1.Joined],
         synchronize: true,
         logging: true,
     }).then((_) => __awaiter(void 0, void 0, void 0, function* () {
@@ -55,7 +54,7 @@ app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: false }));
 const io = new socket_io_1.Server(server, {
     cors: {
-        origin: "http://localhost:3000",
+        origin: process.env.CLIENT_END_POINT,
         methods: ["GET", "POST"]
     }
 });
@@ -70,6 +69,7 @@ io.on("connection", (socket) => {
         }).save();
     }));
     socket.on("join", (data) => {
+        console.log("ram");
         socket.join(data.id);
         socket.join(data.userID);
         if (data.currentRoom) {

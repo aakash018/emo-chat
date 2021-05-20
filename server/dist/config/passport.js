@@ -17,18 +17,18 @@ const passport_google_oauth2_1 = require("passport-google-oauth2");
 const Users_1 = require("../entities/Users");
 const typeorm_1 = require("typeorm");
 passport_1.default.use(new passport_google_oauth2_1.Strategy({
-    clientID: "134958429648-ivf670a18j39i6gpgpf4e1ge0lt19l4t.apps.googleusercontent.com",
-    clientSecret: "IVvMi7-ERFHKj6NayInh5QBn",
-    callbackURL: "http://localhost:5000/auth/google/callback",
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOODLE_CLIENT_SECRET,
+    callbackURL: `${process.env.SERVER_END_POINT}/auth/google/callback`,
     passReqToCallback: true,
 }, (_, __, ___, profile, done) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log(process.env.GOODLE_CLIENT_SECRET);
     const { displayName, given_name, family_name, email, picture } = profile;
     try {
         if (yield Users_1.User.findOne({ where: { email } })) {
             done(null, profile);
         }
         else {
-            console.log("Else part ran");
             yield typeorm_1.getConnection()
                 .createQueryBuilder()
                 .insert()
