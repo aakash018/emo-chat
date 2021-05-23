@@ -1,9 +1,9 @@
-let roomID: string | null = null;
 
+let _CurrentroomID: string | null = null;
 export const getCurrentRoom = () => {
-    return roomID
+    return _CurrentroomID
 }
 
 export const setCurrentRoom = (id: string) => {
-    roomID = id
+    _CurrentroomID = id
 }

@@ -1,4 +1,4 @@
 declare interface IMessage {
-    username: string,
+    writtenBy: string,
     message: string
 }

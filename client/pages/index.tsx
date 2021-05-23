@@ -18,12 +18,11 @@ const Home = () => {
             setLoading(true)
             console.log("Ran")
             const decoded = await refreshToken()
-            if (decoded) {
+            if (decoded?.user) {
                 const { user } = decoded
                 if (setCurrentUser) {
                     setCurrentUser(user)
                 }
-                setLoading(false)
                 router.push("/dash")
             } else {
                 setLoading(false)

@@ -7,7 +7,6 @@ export const validateUser: RequestHandler = (req, res, next) => {
     if (token) {
         try {
             const payload = jwt.verify(token, process.env.JWT_TOKEN) as { user: IUser }
-
             //* If token is validated payload has user info
             if (payload) {
                 req.user = payload.user

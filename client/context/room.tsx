@@ -2,13 +2,13 @@ import React, { useContext, useState } from 'react'
 
 
 interface IRoomData {
-    roomsList: Array<IRoom> | null,
-    setRoomsList: React.Dispatch<React.SetStateAction<Array<IRoom> | null>> | null
+    currentRoom: string | null,
+    setCurrentRoom: React.Dispatch<React.SetStateAction<string | null>> | null
 }
 
 const RoomContext = React.createContext<IRoomData>({
-    roomsList: null,
-    setRoomsList: null
+    currentRoom: null,
+    setCurrentRoom: null
 })
 export const useRoom = () => {
     return useContext(RoomContext)
@@ -16,12 +16,12 @@ export const useRoom = () => {
 
 const RoomProvider: React.FC = ({ children }) => {
 
-    const [roomsList, setRoomsList] = useState<Array<IRoom> | null>(null)
+    const [currentRoom, setCurrentRoom] = useState<string | null>(null)
 
 
     const value = {
-        roomsList,
-        setRoomsList
+        currentRoom: currentRoom,
+        setCurrentRoom: setCurrentRoom
     }
 
     return (

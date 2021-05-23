@@ -1,6 +1,5 @@
-import MainButton from 'components/MainButton'
-import { useUser } from 'context/user'
-import { getCurrentRoom, setCurrentRoom } from 'libs/room'
+// import { getCurrentRoom, setCurrentRoom } from 'libs/room'
+import { useRoom } from 'context/room'
 import React, { FormEvent, useEffect, useRef, useState } from 'react'
 import socket from 'socket'
 import ChatSection from './ChatSection'
@@ -15,10 +14,14 @@ interface ISocketJoined {
 
 const ChatContainer = () => {
 
+    const { setCurrentRoom } = useRoom()
+
     useEffect(() => {
         socket.on("joined", (data: ISocketJoined) => {
             console.log(data)
-            setCurrentRoom(data.id)
+            if (setCurrentRoom) {
+                setCurrentRoom(data.id)
+            }
         })
         return () => {
             socket.disconnect()

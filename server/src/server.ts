@@ -56,12 +56,9 @@ const PORT = process.env.PORT || 5000;
 
 
 
-        // const user = await _.getRepository(User)
-        //     .createQueryBuilder("user")
-        //     .where("user.displayName LIKE :name", { name: `%${"_"}%` })
-        //     .getMany()
+        const room = await _.getRepository(Room).findOne({ relations: ["messages"], where: { id: "a65db84a-f9a4-48cb-af86-255ab242fc9a" } })
 
-        // console.log(user)
+        console.log(room?.messages)
     }).catch(error => console.log(error));
 })();
 
@@ -85,7 +82,7 @@ io.on("connection", (socket) => {
 
     socket.on("message", async (msg) => {
         io.to(msg.roomID).emit("message",
-            { username: msg.username, message: msg.message }
+            { writtenBy: msg.username, message: msg.message }
         )
         //? Save Messages
         await Message.create({

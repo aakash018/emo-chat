@@ -48,6 +48,8 @@ const PORT = process.env.PORT || 5000;
         logging: true,
     }).then((_) => __awaiter(void 0, void 0, void 0, function* () {
         console.log("Connected To PSQL");
+        const room = yield _.getRepository(Rooms_1.Room).findOne({ relations: ["messages"], where: { id: "a65db84a-f9a4-48cb-af86-255ab242fc9a" } });
+        console.log(room === null || room === void 0 ? void 0 : room.messages);
     })).catch(error => console.log(error));
 }))();
 app.use(express_1.default.json());
@@ -61,7 +63,7 @@ const io = new socket_io_1.Server(server, {
 io.on("connection", (socket) => {
     console.log("user connected");
     socket.on("message", (msg) => __awaiter(void 0, void 0, void 0, function* () {
-        io.to(msg.roomID).emit("message", { username: msg.username, message: msg.message });
+        io.to(msg.roomID).emit("message", { writtenBy: msg.username, message: msg.message });
         yield message_1.Message.create({
             message: msg.message,
             writtenBy: msg.username,

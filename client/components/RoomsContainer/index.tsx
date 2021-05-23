@@ -27,7 +27,6 @@ const RoomContainer = () => {
                         return
                     }
                     if (setRoomsList) {
-                        console.log
                         setRoomsList(res.data.rooms)
                     }
                 } catch (e) {
@@ -106,7 +105,7 @@ const RoomContainer = () => {
         <div className={style.rooms}>
             <div className={style.searchRooms}>
                 <form onSubmit={handleSerach}>
-                    <input type="text" placeholder="Search by Id" ref={searchInput} />
+                    <input type="text" placeholder="Search by Name" ref={searchInput} />
                     <button type="submit"><FaSearch /></button>
                 </form>
             </div>

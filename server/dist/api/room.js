@@ -117,5 +117,15 @@ route.get("/getRooms", verifyUser_1.validateUser, (req, res) => __awaiter(void 0
         });
     }
 }));
+route.get("/messages", verifyUser_1.validateUser, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { roomID } = req.query;
+    console.log(roomID);
+    const roomCurrent = yield typeorm_1.getConnection().getRepository(Rooms_1.Room).findOne({ relations: ["messages"], where: { id: roomID } });
+    console.log(roomCurrent);
+    res.json({
+        ok: true,
+        messages: roomCurrent === null || roomCurrent === void 0 ? void 0 : roomCurrent.messages
+    });
+}));
 exports.default = route;
 //# sourceMappingURL=room.js.map

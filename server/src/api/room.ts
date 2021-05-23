@@ -105,7 +105,6 @@ route.get("/getRooms", validateUser, async (req, res) => {
                 user => user.userID === req.user?.id
             )
         )
-
         res.json({
             ok: true,
             rooms
@@ -117,6 +116,18 @@ route.get("/getRooms", validateUser, async (req, res) => {
             message: "Error saving"
         })
     }
+
+})
+
+route.get("/messages", validateUser, async (req, res) => {
+    const { roomID } = req.query as { roomID: string }
+    console.log(roomID)
+    const roomCurrent = await getConnection().getRepository(Room).findOne({ relations: ["messages"], where: { id: roomID } })
+    console.log(roomCurrent)
+    res.json({
+        ok: true,
+        messages: roomCurrent?.messages
+    })
 
 })
 
