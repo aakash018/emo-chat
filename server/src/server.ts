@@ -45,7 +45,7 @@ const PORT = process.env.PORT || 5000;
         database: "emochat",
         entities: [User, Room, Message, Joined],
         synchronize: true,
-        logging: true,
+        logging: false,
 
     }).then(async (_) => {
         console.log("Connected To PSQL")
@@ -56,9 +56,14 @@ const PORT = process.env.PORT || 5000;
 
 
 
-        const room = await _.getRepository(Room).findOne({ relations: ["messages"], where: { id: "a65db84a-f9a4-48cb-af86-255ab242fc9a" } })
+        // const messages = await _.getRepository(Message)
+        //     .createQueryBuilder("message")
+        //     .where("message.roomID = :id", { id: "44f41a79-e723-4ac7-84ae-402a94eddd6f" })
+        //     .leftJoinAndSelect('message.user', 'user')
+        //     .select(["message", "user.id", "user.displayName"])
+        //     .getMany();
 
-        console.log(room?.messages)
+        // console.log(messages[0])
     }).catch(error => console.log(error));
 })();
 
@@ -77,30 +82,58 @@ const io = new Server(server, {
 })
 
 // Sockets
+
+
+
 io.on("connection", (socket) => {
     console.log("user connected")
 
     socket.on("message", async (msg) => {
-        io.to(msg.roomID).emit("message",
-            { writtenBy: msg.username, message: msg.message }
-        )
-        //? Save Messages
-        await Message.create({
-            message: msg.message,
-            writtenBy: msg.username,
-            roomID: msg.roomID
-        }).save()
 
+        //? Save Messages
+        const newMessage = await Message.create({
+            message: msg.message,
+            roomID: msg.roomID,
+            userID: msg.userID
+        }).save()
+        const payload: IMessagePayload = {
+            message: msg.message,
+            createdAt: Date.now(),
+            id: newMessage.id,
+            user: {
+                id: msg.userID,
+                firstName: msg.firstName,
+                picture: msg.picture
+            }
+        }
+        // console.log(msg)
+        io.to(msg.roomID).emit("message",
+            payload
+        )
     })
 
     socket.on("join", (data: ISocketJoinPayload) => {
-        console.log("ram")
+        console.log("Joined", data)
         socket.join(data.id);
         socket.join(data.userID)
         if (data.currentRoom) {
+            console.log("This Ran")
             socket.leave(data.currentRoom)
         }
         io.to(data.userID).emit("joined", { ok: true, id: data.id })
+    })
+
+    socket.on("unsend", async (data: IUnsendData) => {
+
+        try {
+            io.to(data.roomID).emit("unsend", { ok: true, messageID: data.messageID })
+            await Message.delete({ id: data.messageID })
+
+        } catch {
+            io.to(data.roomID).emit("unsend", { ok: false, message: "failed to update message data" })
+        }
+
+
     })
 })
 

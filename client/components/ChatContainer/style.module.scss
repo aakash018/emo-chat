@@ -8,6 +8,15 @@
     @include flex-center(flex-start);
 
     margin-right: 10px;
+
+    @media (max-width: $mobile-view){
+        justify-content: center;
+        margin-right: 0px;
+        margin-bottom: 20px;
+
+
+    }
+
 }
 
 
@@ -24,6 +33,13 @@
     position: relative;
 
     border-radius: 20px;
+
+
+    @media (max-width: $mobile-view){
+        width: 95%;
+        margin-left: 0;
+    }
+
 
     form {
         width: 100%;

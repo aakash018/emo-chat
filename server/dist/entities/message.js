@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Message = void 0;
 const typeorm_1 = require("typeorm");
 const Rooms_1 = require("./Rooms");
+const Users_1 = require("./Users");
 let Message = class Message extends typeorm_1.BaseEntity {
 };
 __decorate([
@@ -21,11 +22,16 @@ __decorate([
 __decorate([
     typeorm_1.Column(),
     __metadata("design:type", String)
-], Message.prototype, "writtenBy", void 0);
+], Message.prototype, "message", void 0);
 __decorate([
     typeorm_1.Column(),
     __metadata("design:type", String)
-], Message.prototype, "message", void 0);
+], Message.prototype, "userID", void 0);
+__decorate([
+    typeorm_1.ManyToOne(() => Users_1.User, user => user),
+    typeorm_1.JoinColumn({ name: "userID" }),
+    __metadata("design:type", Users_1.User)
+], Message.prototype, "user", void 0);
 __decorate([
     typeorm_1.Column(),
     __metadata("design:type", String)

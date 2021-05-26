@@ -12,6 +12,10 @@
     @include flex-center(space-around);
     flex-direction: column;
 
+    @media (max-width: $mobile-view){
+        display: none;
+    }
+
 }
 
 .searchRooms{

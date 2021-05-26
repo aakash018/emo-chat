@@ -1,3 +1,33 @@
+.messageWraper{
+    @include flex-center(space-around, flex-start);
+
+    .options{
+        min-width: 80px;
+        width: auto;
+        @include flex-center;
+
+
+        @media (max-width: $mobile-view){
+            min-width: 40px;       
+        }
+    
+
+    }
+
+    button {
+        background-color: transparent;
+        color: $theme-color-lighter;
+
+        @media (max-width: $mobile-view){
+            font-size: 1rem;       
+        }
+
+    }
+}
+
+
+
+
 .messageContaienr{
     width: 90%;
     min-height: 70px;
@@ -13,21 +43,42 @@
 
     overflow: hidden;
 
-    .profilePic{
+
+    .userInfo{
 
         height: 100%;
-        width: 100px;
+        min-width: 140px;
+        width: auto;
 
-        div{
+        // background-color: chartreuse;
+
+        display: flex;
+        justify-content: space-between;
+
+        .profilePic{
             height: 55px;
             width: 55px;
             border-radius: 50%;
-    
+            flex-shrink: 0;
             background-color: $theme-color-lighter;
             margin-left: 10px;
+
+            overflow: hidden;
         }
 
         }
+
+        span {
+            display: block;
+        }
+
+    .textStuff{
+        margin-left: 10px;
+    }
+    .messageTime{
+        font-size: 0.8rem;
+        color: #615E75 ;
+    }
 
 
     .message{   

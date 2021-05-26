@@ -15,10 +15,17 @@ const MessageInput: React.FC<Props> = ({ }) => {
 
     const handleSend = (e: FormEvent) => {
         e.preventDefault()
+
+        if (messageInput.current?.value.trim() === "") {
+            return
+        }
+
         const info = {
-            username: currentUser?.firstName,
             roomID: currentRoom,
             message: messageInput.current?.value,
+            userID: currentUser?.id,
+            firstName: currentUser?.firstName,
+            picture: currentUser?.picture
         }
 
         socket.emit("message", info)

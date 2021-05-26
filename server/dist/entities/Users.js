@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
 const typeorm_1 = require("typeorm");
 const Joined_1 = require("./Joined");
+const message_1 = require("./message");
 let User = class User extends typeorm_1.BaseEntity {
 };
 __decorate([
@@ -42,6 +43,10 @@ __decorate([
     typeorm_1.OneToMany(() => Joined_1.Joined, joined => joined.rooms),
     __metadata("design:type", Array)
 ], User.prototype, "rooms", void 0);
+__decorate([
+    typeorm_1.OneToMany(() => message_1.Message, message => message.user),
+    __metadata("design:type", Array)
+], User.prototype, "messages", void 0);
 __decorate([
     typeorm_1.CreateDateColumn(),
     __metadata("design:type", Date)

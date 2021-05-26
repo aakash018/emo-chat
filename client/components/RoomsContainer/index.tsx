@@ -1,7 +1,9 @@
 import axios from 'axios'
+import { useRoom } from 'context/room'
 import { useUser } from 'context/user'
 import { getCurrentRoom } from 'libs/room'
-import React, { FormEvent, useEffect, useRef, useState } from 'react'
+import { AlertContext } from 'pages/_app'
+import React, { FormEvent, useContext, useEffect, useRef, useState } from 'react'
 import { FaDoorOpen, FaSearch } from 'react-icons/fa'
 import socket from 'socket'
 import style from './style.module.scss'
@@ -9,6 +11,8 @@ const RoomContainer = () => {
 
     const name = useRef<HTMLInputElement>(null)
     const { currentUser } = useUser()
+    const { currentRoom, setCurrentRoom } = useRoom()
+    const { setAlert } = useContext(AlertContext)
     const [roomsList, setRoomsList] = useState<IRoom[]>([])
     const searchInput = useRef<HTMLInputElement>(null)
 
@@ -18,12 +22,23 @@ const RoomContainer = () => {
             async () => {
 
                 try {
+                    if (setAlert) {
+                        setAlert({
+                            message: ""
+                        })
+                    }
                     const res = await axios.get(`http://localhost:5000/api/room/getRooms`, {
                         headers: {
                             "Authorization": `Bearer ${localStorage.getItem("token")}`
                         }
                     })
                     if (!res.data.ok) {
+                        if (setAlert) {
+                            setAlert({
+                                type: "error",
+                                message: "Error Getting Rooms"
+                            })
+                        }
                         return
                     }
                     if (setRoomsList) {
@@ -31,6 +46,12 @@ const RoomContainer = () => {
                     }
                 } catch (e) {
                     console.error(e)
+                    if (setAlert) {
+                        setAlert({
+                            type: "error",
+                            message: "Server Error"
+                        })
+                    }
                 }
             }
         )()
@@ -42,33 +63,56 @@ const RoomContainer = () => {
             return
         }
 
-        const payload = {
-            creator: currentUser?.displayName,
-            serverName: name.current?.value,
-        }
+        try {
+            const payload = {
+                creator: currentUser?.displayName,
+                serverName: name.current?.value,
+            }
 
-        const res = await axios
-            .post("http://localhost:5000/api/room/add",
-                payload, {
-                headers: {
-                    "Authorization": `Bearer ${localStorage.getItem("token")}`
+            const res = await axios
+                .post("http://localhost:5000/api/room/add",
+                    payload, {
+                    headers: {
+                        "Authorization": `Bearer ${localStorage.getItem("token")}`
+                    }
+                }
+                )
+            console.log(res.data)
+
+            if (!res.data.ok) {
+                if (setAlert) {
+                    setAlert({
+                        type: "error",
+                        message: "Failed to add room"
+                    })
+                }
+                return
+            }
+
+            if (res.data.ok) {
+                if (setRoomsList) {
+                    setRoomsList(prev => prev!.concat(res.data.room))
                 }
             }
-            )
-        console.log(res.data)
-        if (res.data.ok) {
-            if (setRoomsList) {
-                setRoomsList(prev => prev!.concat(res.data.room))
+
+        } catch (e) {
+            console.error(e)
+            if (setAlert) {
+                setAlert({
+                    type: "error",
+                    message: "Failed to add room"
+                })
             }
         }
+
     }
 
 
-    const joinServer = async (id: string) => {
+    const connectToRoom = async (id: string) => {
         const payload = {
             userID: currentUser?.id,
             id: id,
-            currentRoom: getCurrentRoom()
+            currentRoom: currentRoom
         }
         socket.emit("join", payload)
 
@@ -78,6 +122,15 @@ const RoomContainer = () => {
             }
         })
         console.log(res.data)
+        if (setCurrentRoom) {
+            setCurrentRoom(id)
+        }
+        if (setAlert) {
+            setAlert({
+                type: "message",
+                message: "Connected"
+            })
+        }
 
     }
 
@@ -113,7 +166,7 @@ const RoomContainer = () => {
             <div className={style.listRooms}>
                 {
                     roomsList?.map(room => (
-                        <button key={room.id} onClick={() => joinServer(room.id)}>
+                        <button key={room.id} onClick={() => connectToRoom(room.id)}>
                             <section className={style.profilePic}></section>
                             <section className={style.roomInfo} >
                                 <span>{room.name}</span>

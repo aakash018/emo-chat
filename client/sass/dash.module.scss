@@ -27,8 +27,14 @@
     }
 
     .body {
-        display: flex;
+        @include flex-center;
         margin-top: 20px;
+
+        height: 85vh;
+        
+        @media (max-width: $mobile-view){
+            align-items: flex-end;
+        }
     }
 
 

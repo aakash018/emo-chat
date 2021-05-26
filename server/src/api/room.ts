@@ -5,6 +5,7 @@ import { validateUser } from "../utils/verifyUser";
 
 import { Joined } from "../entities/Joined";
 import { User } from "../entities/Users";
+import { Message } from "../entities/message";
 
 
 const route = express()
@@ -13,18 +14,10 @@ route.post("/add", validateUser, async (req, res) => {
     const { serverName }: { serverName: string } = req.body
     const creator = req.user?.displayName
     try {
-        const result = await getConnection()
-            .createQueryBuilder()
-            .insert()
-            .into(Room)
-            .values(
-                {
-                    name: serverName,
-                    owner: creator,
-                }
-            )
-            .execute();
-        const newRoom = await Room.findOne({ id: result.identifiers[0].id })
+        const newRoom = await Room.create({
+            name: serverName,
+            owner: creator
+        }).save()
         await Joined.create({
             roomID: newRoom?.id,
             userID: req.user?.id
@@ -121,12 +114,16 @@ route.get("/getRooms", validateUser, async (req, res) => {
 
 route.get("/messages", validateUser, async (req, res) => {
     const { roomID } = req.query as { roomID: string }
-    console.log(roomID)
-    const roomCurrent = await getConnection().getRepository(Room).findOne({ relations: ["messages"], where: { id: roomID } })
-    console.log(roomCurrent)
+    const messages = await getConnection().getRepository(Message)
+        .createQueryBuilder("message")
+        .where("message.roomID = :id", { id: roomID })
+        .leftJoinAndSelect('message.user', 'user')
+        .select(["message", "user.firstName", "user.picture", "user.id"])
+        .orderBy("message.createdAt", "ASC")
+        .getMany();
     res.json({
         ok: true,
-        messages: roomCurrent?.messages
+        messages: messages
     })
 
 })

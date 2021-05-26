@@ -23,13 +23,19 @@ const ChatSection: React.FC<Props> = ({ }) => {
 
     useEffect(() => {
         socket.on("message", (data: IMessage) => {
+            console.log(data)
             setMessages(prev => prev.concat(data))
             chatContainer.current?.scrollTo(0, chatContainer.current.scrollHeight)
+        })
+        socket.on("unsend", (data) => {
+            console.log(data)
+            setMessages(prev => prev.filter(message => message.id !== data.messageID))
         })
 
         return () => {
             socket.disconnect()
         }
+
     }, [])
 
     useEffect(() => {
@@ -64,9 +70,16 @@ const ChatSection: React.FC<Props> = ({ }) => {
     return (
         <div className={style.chat_section}>
             <div className={style.chat_messages} ref={chatContainer}>
+                {/* {console.log("Messages", messages)} */}
                 {messages.length !== 0 &&
                     messages.map((message, i) => (
-                        <MessageContainer key={i}>{`${message.message}(${message.writtenBy})`}</MessageContainer>
+                        <MessageContainer key={i}
+                            id={message.user.id}
+                            messageID={message.id}
+                            writerName={message.user.firstName}
+                            writenDate={message.createdAt}
+                            profilePic={message.user.picture}
+                        >{`${message.message}`}</MessageContainer>
                     ))
                 }
             </div>

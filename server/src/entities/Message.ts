@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, BaseEntity, ManyToOne, JoinColumn } from "typeorm";
 import { Room } from "./Rooms";
+import { User } from "./Users";
 
 @Entity()
 export class Message extends BaseEntity {
@@ -8,10 +9,13 @@ export class Message extends BaseEntity {
     id: string;
 
     @Column()
-    writtenBy: string
+    message: string
 
     @Column()
-    message: string
+    userID: string
+    @ManyToOne(() => User, user => user)
+    @JoinColumn({ name: "userID" })
+    user: User
 
     @Column()
     roomID: string;

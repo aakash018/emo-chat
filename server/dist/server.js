@@ -45,11 +45,9 @@ const PORT = process.env.PORT || 5000;
         database: "emochat",
         entities: [Users_1.User, Rooms_1.Room, message_1.Message, Joined_1.Joined],
         synchronize: true,
-        logging: true,
+        logging: false,
     }).then((_) => __awaiter(void 0, void 0, void 0, function* () {
         console.log("Connected To PSQL");
-        const room = yield _.getRepository(Rooms_1.Room).findOne({ relations: ["messages"], where: { id: "a65db84a-f9a4-48cb-af86-255ab242fc9a" } });
-        console.log(room === null || room === void 0 ? void 0 : room.messages);
     })).catch(error => console.log(error));
 }))();
 app.use(express_1.default.json());
@@ -63,22 +61,42 @@ const io = new socket_io_1.Server(server, {
 io.on("connection", (socket) => {
     console.log("user connected");
     socket.on("message", (msg) => __awaiter(void 0, void 0, void 0, function* () {
-        io.to(msg.roomID).emit("message", { writtenBy: msg.username, message: msg.message });
-        yield message_1.Message.create({
+        const newMessage = yield message_1.Message.create({
             message: msg.message,
-            writtenBy: msg.username,
-            roomID: msg.roomID
+            roomID: msg.roomID,
+            userID: msg.userID
         }).save();
+        const payload = {
+            message: msg.message,
+            createdAt: Date.now(),
+            id: newMessage.id,
+            user: {
+                id: msg.userID,
+                firstName: msg.firstName,
+                picture: msg.picture
+            }
+        };
+        io.to(msg.roomID).emit("message", payload);
     }));
     socket.on("join", (data) => {
-        console.log("ram");
+        console.log("Joined", data);
         socket.join(data.id);
         socket.join(data.userID);
         if (data.currentRoom) {
+            console.log("This Ran");
             socket.leave(data.currentRoom);
         }
         io.to(data.userID).emit("joined", { ok: true, id: data.id });
     });
+    socket.on("unsend", (data) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            io.to(data.roomID).emit("unsend", { ok: true, messageID: data.messageID });
+            yield message_1.Message.delete({ id: data.messageID });
+        }
+        catch (_a) {
+            io.to(data.roomID).emit("unsend", { ok: false, message: "failed to update message data" });
+        }
+    }));
 });
 app.use(passport_1.default.initialize());
 app.use("/auth", auth_1.default);

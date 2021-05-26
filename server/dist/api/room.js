@@ -18,22 +18,17 @@ const typeorm_1 = require("typeorm");
 const verifyUser_1 = require("../utils/verifyUser");
 const Joined_1 = require("../entities/Joined");
 const Users_1 = require("../entities/Users");
+const message_1 = require("../entities/message");
 const route = express_1.default();
 route.post("/add", verifyUser_1.validateUser, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b;
     const { serverName } = req.body;
     const creator = (_a = req.user) === null || _a === void 0 ? void 0 : _a.displayName;
     try {
-        const result = yield typeorm_1.getConnection()
-            .createQueryBuilder()
-            .insert()
-            .into(Rooms_1.Room)
-            .values({
+        const newRoom = yield Rooms_1.Room.create({
             name: serverName,
-            owner: creator,
-        })
-            .execute();
-        const newRoom = yield Rooms_1.Room.findOne({ id: result.identifiers[0].id });
+            owner: creator
+        }).save();
         yield Joined_1.Joined.create({
             roomID: newRoom === null || newRoom === void 0 ? void 0 : newRoom.id,
             userID: (_b = req.user) === null || _b === void 0 ? void 0 : _b.id
@@ -119,12 +114,16 @@ route.get("/getRooms", verifyUser_1.validateUser, (req, res) => __awaiter(void 0
 }));
 route.get("/messages", verifyUser_1.validateUser, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { roomID } = req.query;
-    console.log(roomID);
-    const roomCurrent = yield typeorm_1.getConnection().getRepository(Rooms_1.Room).findOne({ relations: ["messages"], where: { id: roomID } });
-    console.log(roomCurrent);
+    const messages = yield typeorm_1.getConnection().getRepository(message_1.Message)
+        .createQueryBuilder("message")
+        .where("message.roomID = :id", { id: roomID })
+        .leftJoinAndSelect('message.user', 'user')
+        .select(["message", "user.firstName", "user.picture", "user.id"])
+        .orderBy("message.createdAt", "ASC")
+        .getMany();
     res.json({
         ok: true,
-        messages: roomCurrent === null || roomCurrent === void 0 ? void 0 : roomCurrent.messages
+        messages: messages
     });
 }));
 exports.default = route;

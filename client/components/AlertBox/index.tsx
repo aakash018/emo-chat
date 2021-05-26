@@ -4,8 +4,10 @@ interface Props {
 import style from "./style.module.scss"
 const AlertBox: React.FC<Props> = ({ type, children }) => {
     return (
-        <div className={`${style.alert} ${style}`}>
-            {children}
+        <div className={style.alertWraper} >
+            <div className={`${style.alert} ${style[type]}`}>
+                {children}
+            </div>
         </div>
     )
 }

@@ -1,5 +1,5 @@
 import { useRouter } from "next/router"
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import Image from "next/image"
 import Head from "next/head"
 import { useUser } from "context/user";
@@ -12,10 +12,11 @@ import RoomContainer from "components/RoomsContainer";
 
 
 
+
+
 const Dash: React.FC = () => {
     const router = useRouter()
     const { currentUser, setCurrentUser } = useUser()
-
     useEffect(() => {
         (async () => {
             if (!currentUser?.id) {
@@ -45,6 +46,7 @@ const Dash: React.FC = () => {
                             <Image src="/assets/logo.svg" alt="logo" width="50px" height="50px" />
                             <h1>EmoChat</h1>
                         </div>
+                        {console.log(currentUser!.picture)}
                         <UserProfile picture={currentUser!.picture} displayName={currentUser!.displayName} />
                     </div>
                 }

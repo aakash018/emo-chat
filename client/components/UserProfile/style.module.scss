@@ -11,12 +11,17 @@
     background-color: $theme-color-light;
     color: white;
 
-    img {
-        border-radius: 50%;
+    .profilePic {
         margin-left: 8px;
         margin-top: 5px;
-
+        flex-shrink: 0;
         cursor: pointer;
+
+        overflow: hidden;
+
+        img{
+            border-radius: 50%;
+        }
     }
 
     transition: width 0.6s ease-in-out;
