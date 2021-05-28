@@ -57,6 +57,13 @@ const RoomContainer = () => {
         )()
     }, [])
 
+
+    useEffect(() => {
+        socket.on("user-left-room", (data: { ok: boolean, roomID: string }) => {
+            setRoomsList(prev => prev.filter(room => room.id !== data.roomID))
+        })
+    }, [])
+
     const addRoom = async () => {
 
         if (name.current?.value.trim() === "") {

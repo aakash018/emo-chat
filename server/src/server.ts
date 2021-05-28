@@ -21,6 +21,8 @@ import { User } from "./entities/Users"
 import { Room } from "./entities/Rooms"
 import { Message } from "./entities/message"
 import { Joined } from "./entities/Joined"
+import { getOnlineClients, pushOnlineClient, removeUser } from "./onlineClients"
+
 
 
 const app = express()
@@ -88,8 +90,16 @@ const io = new Server(server, {
 io.on("connection", (socket) => {
     console.log("user connected")
 
-    socket.on("message", async (msg) => {
 
+    socket.on("message", async (msg:
+        {
+            message: string,
+            roomID: string,
+            userID: string,
+            firstName: string,
+            picture: string
+        }
+    ) => {
         //? Save Messages
         const newMessage = await Message.create({
             message: msg.message,
@@ -106,20 +116,32 @@ io.on("connection", (socket) => {
                 picture: msg.picture
             }
         }
+
         // console.log(msg)
         io.to(msg.roomID).emit("message",
             payload
         )
     })
 
-    socket.on("join", (data: ISocketJoinPayload) => {
-        console.log("Joined", data)
+    socket.on("join", async (data: ISocketJoinPayload) => {
+        const user = await User.findOne({ where: { id: data.userID } })
+
+        if (!user) {
+            return io.to(data.userID).emit("joined", { ok: false, message: "User not found" })
+        }
+
         socket.join(data.id);
         socket.join(data.userID)
         if (data.currentRoom) {
-            console.log("This Ran")
             socket.leave(data.currentRoom)
         }
+        pushOnlineClient(
+            data.id,
+            data.userID,
+            user?.displayName,
+            user?.picture
+        )
+        console.log(getOnlineClients(data.id))
         io.to(data.userID).emit("joined", { ok: true, id: data.id })
     })
 
@@ -135,6 +157,22 @@ io.on("connection", (socket) => {
 
 
     })
+
+    socket.on("user-left-room", async (data: { userID: string, roomID: string }) => {
+
+        await Joined.delete({
+            userID: data.userID,
+            roomID: data.roomID
+        })
+
+        io.to(data.userID).emit("user-left-room", { ok: true, roomID: data.roomID })
+
+        removeUser(data.roomID, data.userID)
+
+        socket.leave(data.roomID)
+
+    })
+
 })
 
 

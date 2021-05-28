@@ -69,21 +69,25 @@ const ChatSection: React.FC<Props> = ({ }) => {
 
     return (
         <div className={style.chat_section}>
-            <div className={style.chat_messages} ref={chatContainer}>
-                {/* {console.log("Messages", messages)} */}
-                {messages.length !== 0 &&
-                    messages.map((message, i) => (
-                        <MessageContainer key={i}
-                            id={message.user.id}
-                            messageID={message.id}
-                            writerName={message.user.firstName}
-                            writenDate={message.createdAt}
-                            profilePic={message.user.picture}
-                        >{`${message.message}`}</MessageContainer>
-                    ))
-                }
-            </div>
-            <MessageInput />
+            {currentRoom &&
+                <>
+                    <div className={style.chat_messages} ref={chatContainer}>
+                        {/* {console.log("Messages", messages)} */}
+                        {messages.length !== 0 &&
+                            messages.map((message, i) => (
+                                <MessageContainer key={i}
+                                    id={message.user.id}
+                                    messageID={message.id}
+                                    writerName={message.user.firstName}
+                                    writenDate={message.createdAt}
+                                    profilePic={message.user.picture}
+                                >{`${message.message}`}</MessageContainer>
+                            ))
+                        }
+                    </div>
+                    <MessageInput />
+                </>
+            }
         </div>
     )
 }

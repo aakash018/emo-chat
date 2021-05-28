@@ -27,6 +27,7 @@ const Users_1 = require("./entities/Users");
 const Rooms_1 = require("./entities/Rooms");
 const message_1 = require("./entities/message");
 const Joined_1 = require("./entities/Joined");
+const onlineClients_1 = require("./onlineClients");
 const app = express_1.default();
 app.use(cookie_parser_1.default());
 app.use(cors_1.default({
@@ -78,16 +79,20 @@ io.on("connection", (socket) => {
         };
         io.to(msg.roomID).emit("message", payload);
     }));
-    socket.on("join", (data) => {
-        console.log("Joined", data);
+    socket.on("join", (data) => __awaiter(void 0, void 0, void 0, function* () {
+        const user = yield Users_1.User.findOne({ where: { id: data.userID } });
+        if (!user) {
+            return io.to(data.userID).emit("joined", { ok: false, message: "User not found" });
+        }
         socket.join(data.id);
         socket.join(data.userID);
         if (data.currentRoom) {
-            console.log("This Ran");
             socket.leave(data.currentRoom);
         }
+        onlineClients_1.pushOnlineClient(data.id, data.userID, user === null || user === void 0 ? void 0 : user.displayName, user === null || user === void 0 ? void 0 : user.picture);
+        console.log(onlineClients_1.getOnlineClients(data.id));
         io.to(data.userID).emit("joined", { ok: true, id: data.id });
-    });
+    }));
     socket.on("unsend", (data) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             io.to(data.roomID).emit("unsend", { ok: true, messageID: data.messageID });
@@ -96,6 +101,15 @@ io.on("connection", (socket) => {
         catch (_a) {
             io.to(data.roomID).emit("unsend", { ok: false, message: "failed to update message data" });
         }
+    }));
+    socket.on("user-left-room", (data) => __awaiter(void 0, void 0, void 0, function* () {
+        yield Joined_1.Joined.delete({
+            userID: data.userID,
+            roomID: data.roomID
+        });
+        io.to(data.userID).emit("user-left-room", { ok: true, roomID: data.roomID });
+        onlineClients_1.removeUser(data.roomID, data.userID);
+        socket.leave(data.roomID);
     }));
 });
 app.use(passport_1.default.initialize());

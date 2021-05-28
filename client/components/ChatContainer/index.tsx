@@ -1,5 +1,6 @@
 // import { getCurrentRoom, setCurrentRoom } from 'libs/room'
 import AlertBox from 'components/AlertBox'
+import RoomInfo from 'components/RoomInfo'
 import { useRoom } from 'context/room'
 import React, { FormEvent, useEffect, useRef, useState } from 'react'
 import socket from 'socket'
@@ -15,7 +16,7 @@ interface ISocketJoined {
 
 const ChatContainer = () => {
 
-    const { setCurrentRoom } = useRoom()
+    const { currentRoom, setCurrentRoom } = useRoom()
 
     useEffect(() => {
         socket.on("joined", (data: ISocketJoined) => {
@@ -34,6 +35,9 @@ const ChatContainer = () => {
     return (
         <div className={style.chat} style={{ position: "relative" }}>
             <ChatSection />
+            { currentRoom &&
+                <RoomInfo />
+            }
         </div>
     )
 }

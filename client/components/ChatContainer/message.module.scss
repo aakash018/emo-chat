@@ -36,10 +36,10 @@
     background-color: $theme-color-light;
 
     margin-bottom: 25px;
-    border-radius: 520px;
+    border-radius: 10px;
     color: white;
 
-    @include flex-center(space-between);
+    @include flex-center(space-between, flex-start);
 
     overflow: hidden;
 
@@ -50,10 +50,11 @@
         min-width: 140px;
         width: auto;
 
-        // background-color: chartreuse;
+        margin-top: 8px;
 
         display: flex;
         justify-content: space-between;
+
 
         .profilePic{
             height: 55px;
@@ -66,18 +67,18 @@
             overflow: hidden;
         }
 
-        }
-
+        
         span {
             display: block;
         }
-
-    .textStuff{
-        margin-left: 10px;
-    }
-    .messageTime{
-        font-size: 0.8rem;
-        color: #615E75 ;
+        
+        .textStuff{
+            margin-left: 10px;
+        }
+        .messageTime{
+            font-size: 0.8rem;
+            color: #615E75 ;
+        }
     }
 
 
