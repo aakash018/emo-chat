@@ -35,7 +35,7 @@ const pushOnlineClient = (roomID, userID, displayName, profilePic) => {
 };
 exports.pushOnlineClient = pushOnlineClient;
 const removeUser = (roomID, userID) => {
-    console.log(roomID, userID);
+    console.log(roomID, userID, "Hello");
     console.log("CL", OnlineClients[0].onlineClients);
 };
 exports.removeUser = removeUser;

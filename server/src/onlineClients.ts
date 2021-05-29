@@ -47,7 +47,7 @@ export const pushOnlineClient = (roomID: string,
 }
 
 export const removeUser = (roomID: string, userID: string) => {
-    console.log(roomID, userID)
+    console.log(roomID, userID, "Hello")
 
     console.log("CL", OnlineClients[0].onlineClients)
 
