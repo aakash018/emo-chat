@@ -1,0 +1,35 @@
+
+
+
+
+
+
+//* User Info Style
+
+.room_user_info{
+    @include flex-center(space-evenly);
+
+    width: 200px;
+
+    color: rgb(85, 85, 85);
+
+    .profilePic{
+        @include flex-center;
+    }
+
+    img {
+        border-radius: 50%;
+    }
+    
+    .online {
+        border: 2px solid $secondary-theme-color;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+    }
+
+    .online_displayName{
+        color: white;
+    }
+
+}

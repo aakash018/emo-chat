@@ -126,5 +126,18 @@ route.get("/messages", verifyUser_1.validateUser, (req, res) => __awaiter(void 0
         messages: messages
     });
 }));
+route.get("/users", verifyUser_1.validateUser, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { roomID } = req.query;
+    const currentRoom = yield typeorm_1.getConnection().getRepository(Joined_1.Joined)
+        .createQueryBuilder("joined")
+        .where("joined.roomID = :id", { id: roomID })
+        .leftJoinAndSelect('joined.rooms', 'users')
+        .select(["joined", "users.displayName", "users.picture"])
+        .getMany();
+    res.json({
+        ok: true,
+        users: currentRoom
+    });
+}));
 exports.default = route;
 //# sourceMappingURL=room.js.map

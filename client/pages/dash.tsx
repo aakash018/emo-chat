@@ -9,6 +9,7 @@ import UserProfile from "components/UserProfile";
 import { refreshToken } from "utils/refresh_token";
 import ChatContainer from "components/ChatContainer";
 import RoomContainer from "components/RoomsContainer";
+import socket from "socket";
 
 
 
@@ -33,6 +34,15 @@ const Dash: React.FC = () => {
         })()
     }, [])
 
+    useEffect(() => {
+        if (currentUser) {
+            const payload = {
+                userID: currentUser?.id
+            }
+            socket.emit("user-loged-on", payload)
+        }
+    }, [currentUser])
+
     return (
         <>
             <Head>
@@ -46,7 +56,6 @@ const Dash: React.FC = () => {
                             <Image src="/assets/logo.svg" alt="logo" width="50px" height="50px" />
                             <h1>EmoChat</h1>
                         </div>
-                        {console.log(currentUser!.picture)}
                         <UserProfile picture={currentUser!.picture} displayName={currentUser!.displayName} />
                     </div>
                 }

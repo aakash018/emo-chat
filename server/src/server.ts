@@ -21,7 +21,7 @@ import { User } from "./entities/Users"
 import { Room } from "./entities/Rooms"
 import { Message } from "./entities/message"
 import { Joined } from "./entities/Joined"
-import { getOnlineClients, pushOnlineClient, removeUser } from "./onlineClients"
+import { getOnlineClients, addOnlienClients } from "./onlineClients"
 
 
 
@@ -90,6 +90,13 @@ const io = new Server(server, {
 io.on("connection", (socket) => {
     console.log("user connected")
 
+    socket.on("user-loged-on", (data: { userID: string }) => {
+        addOnlienClients(data.userID)
+    })
+
+    socket.on("getOnlineClients", (data: { userID: string }) => {
+        io.to(data.userID).emit("user-loged-in", { ok: true, clients: getOnlineClients() })
+    })
 
     socket.on("message", async (msg:
         {
@@ -117,6 +124,8 @@ io.on("connection", (socket) => {
             }
         }
 
+        console.log(getOnlineClients())
+
         // console.log(msg)
         io.to(msg.roomID).emit("message",
             payload
@@ -135,13 +144,6 @@ io.on("connection", (socket) => {
         if (data.currentRoom) {
             socket.leave(data.currentRoom)
         }
-        pushOnlineClient(
-            data.id,
-            data.userID,
-            user?.displayName,
-            user?.picture
-        )
-        console.log(getOnlineClients(data.id))
         io.to(data.userID).emit("joined", { ok: true, id: data.id })
     })
 
@@ -166,8 +168,6 @@ io.on("connection", (socket) => {
         })
 
         io.to(data.userID).emit("user-left-room", { ok: true, roomID: data.roomID })
-
-        removeUser(data.roomID, data.userID)
 
         socket.leave(data.roomID)
 

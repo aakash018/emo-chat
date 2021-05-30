@@ -128,5 +128,21 @@ route.get("/messages", validateUser, async (req, res) => {
 
 })
 
+route.get("/users", validateUser, async (req, res) => {
+    const { roomID } = req.query as { roomID: string }
+
+    const currentRoom = await getConnection().getRepository(Joined)
+        .createQueryBuilder("joined")
+        .where("joined.roomID = :id", { id: roomID })
+        .leftJoinAndSelect('joined.rooms', 'users')
+        .select(["joined", "users.displayName", "users.picture"])
+        .getMany();
+
+    res.json({
+        ok: true,
+        users: currentRoom
+    })
+
+})
 
 export default route

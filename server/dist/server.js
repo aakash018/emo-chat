@@ -61,6 +61,12 @@ const io = new socket_io_1.Server(server, {
 });
 io.on("connection", (socket) => {
     console.log("user connected");
+    socket.on("user-loged-on", (data) => {
+        onlineClients_1.addOnlienClients(data.userID);
+    });
+    socket.on("getOnlineClients", (data) => {
+        io.to(data.userID).emit("user-loged-in", { ok: true, clients: onlineClients_1.getOnlineClients() });
+    });
     socket.on("message", (msg) => __awaiter(void 0, void 0, void 0, function* () {
         const newMessage = yield message_1.Message.create({
             message: msg.message,
@@ -77,6 +83,7 @@ io.on("connection", (socket) => {
                 picture: msg.picture
             }
         };
+        console.log(onlineClients_1.getOnlineClients());
         io.to(msg.roomID).emit("message", payload);
     }));
     socket.on("join", (data) => __awaiter(void 0, void 0, void 0, function* () {
@@ -89,8 +96,6 @@ io.on("connection", (socket) => {
         if (data.currentRoom) {
             socket.leave(data.currentRoom);
         }
-        onlineClients_1.pushOnlineClient(data.id, data.userID, user === null || user === void 0 ? void 0 : user.displayName, user === null || user === void 0 ? void 0 : user.picture);
-        console.log(onlineClients_1.getOnlineClients(data.id));
         io.to(data.userID).emit("joined", { ok: true, id: data.id });
     }));
     socket.on("unsend", (data) => __awaiter(void 0, void 0, void 0, function* () {
@@ -108,7 +113,6 @@ io.on("connection", (socket) => {
             roomID: data.roomID
         });
         io.to(data.userID).emit("user-left-room", { ok: true, roomID: data.roomID });
-        onlineClients_1.removeUser(data.roomID, data.userID);
         socket.leave(data.roomID);
     }));
 });
