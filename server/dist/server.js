@@ -60,12 +60,16 @@ const io = new socket_io_1.Server(server, {
     }
 });
 io.on("connection", (socket) => {
-    console.log("user connected");
+    socket.on("disconnect", () => {
+        onlineClients_1.removeOnlineClient(socket.id);
+        socket.broadcast.emit("online-clients", { ok: true, clients: onlineClients_1.getOnlineClients() });
+    });
     socket.on("user-loged-on", (data) => {
-        onlineClients_1.addOnlienClients(data.userID);
+        onlineClients_1.addOnlienClients(data.userID, socket.id);
+        socket.broadcast.emit("online-clients", { ok: true, clients: onlineClients_1.getOnlineClients() });
     });
     socket.on("getOnlineClients", (data) => {
-        io.to(data.userID).emit("user-loged-in", { ok: true, clients: onlineClients_1.getOnlineClients() });
+        io.to(data.userID).emit("online-clients", { ok: true, clients: onlineClients_1.getOnlineClients() });
     });
     socket.on("message", (msg) => __awaiter(void 0, void 0, void 0, function* () {
         const newMessage = yield message_1.Message.create({

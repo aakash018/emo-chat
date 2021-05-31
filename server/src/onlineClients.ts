@@ -1,13 +1,21 @@
-const ListOfOnlineClients: string[] = []
+interface IOnlineClients {
+    socketID: string,
+    userID: string
+}
+
+let ListOfOnlineClients: IOnlineClients[] = []
 
 export const getOnlineClients = () => {
     return ListOfOnlineClients
 }
 
-export const addOnlienClients = (userID: string) => {
-    ListOfOnlineClients.push(userID)
+export const addOnlienClients = (userID: string, socketID: string) => {
+    ListOfOnlineClients.push({
+        socketID,
+        userID
+    })
 }
 
-export const removeOnlineClient = (userID: string) => {
-    ListOfOnlineClients.splice(ListOfOnlineClients.indexOf(userID), 1)
+export const removeOnlineClient = (socketID: string) => {
+    ListOfOnlineClients = ListOfOnlineClients.filter(clients => clients.socketID !== socketID)
 }

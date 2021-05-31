@@ -21,7 +21,7 @@ import { User } from "./entities/Users"
 import { Room } from "./entities/Rooms"
 import { Message } from "./entities/message"
 import { Joined } from "./entities/Joined"
-import { getOnlineClients, addOnlienClients } from "./onlineClients"
+import { getOnlineClients, addOnlienClients, removeOnlineClient } from "./onlineClients"
 
 
 
@@ -88,14 +88,22 @@ const io = new Server(server, {
 
 
 io.on("connection", (socket) => {
-    console.log("user connected")
 
-    socket.on("user-loged-on", (data: { userID: string }) => {
-        addOnlienClients(data.userID)
+    socket.on("disconnect", () => {
+        removeOnlineClient(socket.id)
+        socket.broadcast.emit("online-clients", { ok: true, clients: getOnlineClients() })
+
     })
 
+    socket.on("user-loged-on", (data: { userID: string }) => {
+        addOnlienClients(data.userID, socket.id)
+        socket.broadcast.emit("online-clients", { ok: true, clients: getOnlineClients() })
+    })
+
+
+    //! Maybe USE HTTP for this --- REALLY BAD ---
     socket.on("getOnlineClients", (data: { userID: string }) => {
-        io.to(data.userID).emit("user-loged-in", { ok: true, clients: getOnlineClients() })
+        io.to(data.userID).emit("online-clients", { ok: true, clients: getOnlineClients() })
     })
 
     socket.on("message", async (msg:

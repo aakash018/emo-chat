@@ -1,4 +1,29 @@
+.room_info_container{
+    height: 100%;
+    @include flex-center;
+    flex-direction: column;
 
+    @media (max-width: $mobile-view){
+        display: none;
+    }
+}
+
+
+
+//* User Container Style
+
+.room_users{
+    width: 100%;
+    height: 90%;
+
+    padding-top: 20px;
+
+    overflow: auto;
+
+    @include flex-center(flex-start);
+    flex-direction: column;
+    gap: 15px;
+}
 
 
 

@@ -6,15 +6,24 @@ import { useEffect, useState } from "react"
 import { GoSignOut } from "react-icons/go"
 import socket from "socket"
 import UserInfo from "./UserInfo"
+import style from "./style.module.scss"
+
+
+
 interface Props {
 
+}
+
+interface IOnlineClients {
+    socketID: string,
+    userID: string
 }
 
 const RoomInfo: React.FC<Props> = ({ }) => {
 
     const { setCurrentRoom, currentRoom } = useRoom()
     const { currentUser } = useUser()
-    const [onlineUsers, setOnlineUsers] = useState<string[]>([])
+    const [onlineUsers, setOnlineUsers] = useState<IOnlineClients[]>([])
 
     const [roomsUsers, setRoomsUsers] = useState<IRoomUsers[]>([])
 
@@ -22,7 +31,8 @@ const RoomInfo: React.FC<Props> = ({ }) => {
 
         socket.emit("getOnlineClients", { userID: currentUser?.id })
 
-        socket.on("user-loged-in", (data: { ok: boolean, clients: string[] }) => {
+        socket.on("online-clients", (data: { ok: boolean, clients: IOnlineClients[] }) => {
+            console.log("Offlene", data)
             if (data.ok)
                 setOnlineUsers(data.clients)
         })
@@ -41,7 +51,6 @@ const RoomInfo: React.FC<Props> = ({ }) => {
                         }
                     })
                 setRoomsUsers(res.data.users)
-                console.log("Impo", res.data)
             }
         )()
     }, [])
@@ -59,23 +68,34 @@ const RoomInfo: React.FC<Props> = ({ }) => {
         }
     }
 
+    const isUserOnline = (userID: string) => {
+
+        let isOnline = false;
+
+        onlineUsers.forEach(users => {
+            if (users.userID === userID) return isOnline = true
+        })
+
+        return isOnline
+    }
+
 
     return (
-        <div>
-            {console.log(onlineUsers)}
+        <div className={style.room_info_container}>
             <MainButton type="button" onClick={handleLeaveRoom}> <GoSignOut color="red" /> Leave Room</MainButton>
-            <>
+            <div className={style.room_users}>
                 {
                     roomsUsers.map((users) => (
                         <UserInfo
                             key={users.userID}
                             picture={users.rooms.picture}
                             displayName={users.rooms.displayName}
-                            online={false}
+                            online={isUserOnline(users.userID)}
                         />
+
                     ))
                 }
-            </>
+            </div>
         </div>
     )
 }
