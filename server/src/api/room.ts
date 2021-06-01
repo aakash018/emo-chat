@@ -38,7 +38,6 @@ route.post("/add", validateUser, async (req, res) => {
 
 route.post("/joinRoom", validateUser, async (req, res) => {
     const { roomID }: { roomID: string } = req.body
-
     const joinedRooms = await getConnection()
         .getRepository(User)
         .findOne({ id: req.user?.id }, { relations: ["rooms"] })

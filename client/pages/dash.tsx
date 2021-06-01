@@ -1,9 +1,9 @@
 import { useRouter } from "next/router"
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import Image from "next/image"
 import Head from "next/head"
 import { useUser } from "context/user";
-import RoomProvider from "context/room"
+
 import style from "../sass/dash.module.scss"
 import UserProfile from "components/UserProfile";
 import { refreshToken } from "utils/refresh_token";
@@ -63,10 +63,10 @@ const Dash: React.FC = () => {
 
                 </div>
                 <div className={style.body}>
-                    <RoomProvider>
-                        <RoomContainer />
-                        <ChatContainer />
-                    </RoomProvider>
+
+                    <RoomContainer />
+                    <ChatContainer />
+
                 </div>
 
             </div>

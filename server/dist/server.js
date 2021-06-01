@@ -46,7 +46,7 @@ const PORT = process.env.PORT || 5000;
         database: "emochat",
         entities: [Users_1.User, Rooms_1.Room, message_1.Message, Joined_1.Joined],
         synchronize: true,
-        logging: true,
+        logging: false,
     }).then((_) => __awaiter(void 0, void 0, void 0, function* () {
         console.log("Connected To PSQL");
     })).catch(error => console.log(error));
@@ -99,6 +99,7 @@ io.on("connection", (socket) => {
         const joinedRooms = yield typeorm_1.getConnection()
             .getRepository(Users_1.User)
             .findOne({ id: data.userID }, { relations: ["rooms"] });
+        console.log(joinedRooms);
         if (joinedRooms === null || joinedRooms === void 0 ? void 0 : joinedRooms.rooms.every(room => room.roomID !== data.id)) {
             io.to(data.id).emit("a-user-joined", {
                 ok: true, user: {

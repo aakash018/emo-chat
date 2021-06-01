@@ -6,6 +6,7 @@ import '../sass/globals.scss'
 import { useEffect, useState } from 'react'
 import { refreshToken } from 'utils/refresh_token'
 import React from 'react'
+import RoomProvider from 'context/room'
 
 // ? For Global Alert ---
 
@@ -62,10 +63,12 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
 
   return (
     <UserProvider>
-      <AlertContext.Provider value={value}>
-        {alert?.message !== "" && <AlertBox type={alert!.type || "error"}>{alert?.message}</AlertBox>}
-        <Component {...pageProps} />
-      </AlertContext.Provider>
+      <RoomProvider>
+        <AlertContext.Provider value={value}>
+          {alert?.message !== "" && <AlertBox type={alert!.type || "error"}>{alert?.message}</AlertBox>}
+          <Component {...pageProps} />
+        </AlertContext.Provider>
+      </RoomProvider>
     </UserProvider>
   )
 }

@@ -47,7 +47,7 @@ const PORT = process.env.PORT || 5000;
         database: "emochat",
         entities: [User, Room, Message, Joined],
         synchronize: true,
-        logging: true,
+        logging: false,
 
     }).then(async (_) => {
         console.log("Connected To PSQL")
@@ -148,11 +148,11 @@ io.on("connection", (socket) => {
         }
 
         //? To Update room's users list
-
         const joinedRooms = await getConnection()
             .getRepository(User)
             .findOne({ id: data.userID }, { relations: ["rooms"] })
 
+        console.log(joinedRooms)
         if (joinedRooms?.rooms.every(room => room.roomID !== data.id)) {
             io.to(data.id).emit("a-user-joined", {
                 ok: true, user: {
