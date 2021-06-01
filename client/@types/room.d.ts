@@ -8,7 +8,7 @@ declare interface IRoom {
 
 declare interface IRoomUsers {
     userID: string,
-    roomID: string,
+    roomID?: string,
     rooms: {
         displayName: string,
         picture: string

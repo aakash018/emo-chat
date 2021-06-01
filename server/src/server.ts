@@ -16,7 +16,7 @@ import auth from './api/auth'
 import room from "./api/room"
 
 
-import { createConnection } from "typeorm"
+import { createConnection, getConnection } from "typeorm"
 import { User } from "./entities/Users"
 import { Room } from "./entities/Rooms"
 import { Message } from "./entities/message"
@@ -47,7 +47,7 @@ const PORT = process.env.PORT || 5000;
         database: "emochat",
         entities: [User, Room, Message, Joined],
         synchronize: true,
-        logging: false,
+        logging: true,
 
     }).then(async (_) => {
         console.log("Connected To PSQL")
@@ -141,17 +141,30 @@ io.on("connection", (socket) => {
     })
 
     socket.on("join", async (data: ISocketJoinPayload) => {
-        const user = await User.findOne({ where: { id: data.userID } })
-
-        if (!user) {
-            return io.to(data.userID).emit("joined", { ok: false, message: "User not found" })
-        }
-
         socket.join(data.id);
         socket.join(data.userID)
         if (data.currentRoom) {
             socket.leave(data.currentRoom)
         }
+
+        //? To Update room's users list
+
+        const joinedRooms = await getConnection()
+            .getRepository(User)
+            .findOne({ id: data.userID }, { relations: ["rooms"] })
+
+        if (joinedRooms?.rooms.every(room => room.roomID !== data.id)) {
+            io.to(data.id).emit("a-user-joined", {
+                ok: true, user: {
+                    userID: data.userID,
+                    rooms: {                                     //? Yeah its uhmmm....
+                        displayName: data.displayName,
+                        picture: data.picture
+                    }
+                }
+            })
+        }
+        //? To say the client that they have joined
         io.to(data.userID).emit("joined", { ok: true, id: data.id })
     })
 
@@ -176,6 +189,7 @@ io.on("connection", (socket) => {
         })
 
         io.to(data.userID).emit("user-left-room", { ok: true, roomID: data.roomID })
+        io.to(data.roomID).emit("updateList", { ok: true, userID: data.userID })
 
         socket.leave(data.roomID)
 

@@ -36,6 +36,18 @@ const RoomInfo: React.FC<Props> = ({ }) => {
             if (data.ok)
                 setOnlineUsers(data.clients)
         })
+
+        socket.on("a-user-joined", (data: { ok: boolean, user: IRoomUsers }) => {
+            if (data.ok) {
+                setRoomsUsers(prev => prev.concat(data.user))
+            }
+        })
+
+        socket.on("updateList", (data: { ok: boolean, userID: string }) => {
+            if (data.ok) {
+                setRoomsUsers(prev => prev.filter(user => user.userID !== data.userID))
+            }
+        })
     }, [])
 
     useEffect(() => {
@@ -53,7 +65,7 @@ const RoomInfo: React.FC<Props> = ({ }) => {
                 setRoomsUsers(res.data.users)
             }
         )()
-    }, [])
+    }, [currentRoom])
 
     const handleLeaveRoom = () => {
 
@@ -84,7 +96,8 @@ const RoomInfo: React.FC<Props> = ({ }) => {
         <div className={style.room_info_container}>
             <MainButton type="button" onClick={handleLeaveRoom}> <GoSignOut color="red" /> Leave Room</MainButton>
             <div className={style.room_users}>
-                {
+                {console.log(roomsUsers)}
+                {roomsUsers.length !== 0 &&
                     roomsUsers.map((users) => (
                         <UserInfo
                             key={users.userID}

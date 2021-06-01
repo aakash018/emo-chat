@@ -1,7 +1,6 @@
 import axios from 'axios'
 import { useRoom } from 'context/room'
 import { useUser } from 'context/user'
-import { getCurrentRoom } from 'libs/room'
 import { AlertContext } from 'pages/_app'
 import React, { FormEvent, useContext, useEffect, useRef, useState } from 'react'
 import { FaDoorOpen, FaSearch } from 'react-icons/fa'
@@ -58,11 +57,11 @@ const RoomContainer = () => {
     }, [])
 
 
-    useEffect(() => {
-        socket.on("user-left-room", (data: { ok: boolean, roomID: string }) => {
-            setRoomsList(prev => prev.filter(room => room.id !== data.roomID))
-        })
-    }, [])
+    // useEffect(() => {
+    //     socket.on("user-left-room", (data: { ok: boolean, roomID: string }) => {
+    //         setRoomsList(prev => prev.filter(room => room.id !== data.roomID))
+    //     })
+    // }, [])
 
     const addRoom = async () => {
 
@@ -119,7 +118,9 @@ const RoomContainer = () => {
         const payload = {
             userID: currentUser?.id,
             id: id,
-            currentRoom: currentRoom
+            currentRoom: currentRoom,
+            displayName: currentUser?.displayName,
+            picture: currentUser?.picture
         }
         socket.emit("join", payload)
 

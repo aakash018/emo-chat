@@ -6,7 +6,9 @@ declare interface IRefToken {
 declare interface ISocketJoinPayload {
     id: string,
     userID: string,
-    currentRoom: string | null
+    currentRoom: string | null, //* @param ("If any rooom was joined")
+    displayName: string,
+    picture: string
 }
 
 declare interface IJWT {
