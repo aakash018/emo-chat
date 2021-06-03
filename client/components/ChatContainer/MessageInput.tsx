@@ -20,6 +20,17 @@ const MessageInput: React.FC<Props> = ({ }) => {
             return
         }
 
+        if (messageInput.current?.value.startsWith("--")) {
+
+            const flag = messageInput.current.value.split(" ")[0].split("--")[1]
+
+            return console.log({
+                flag, // Gets the flag
+                message: messageInput.current.value.split(`${flag} `)[1]
+            }
+            )
+        }
+
         const info = {
             roomID: currentRoom,
             message: messageInput.current?.value,
