@@ -1,5 +1,6 @@
 import { useRoom } from "context/room"
 import { useUser } from "context/user"
+import { FlagsStyle } from "libs/flags"
 import Image from "next/image"
 import { useState } from "react"
 import socket from "socket"
@@ -10,7 +11,8 @@ interface Props {
     writerName: string,
     writenDate: number,
     profilePic: string,
-    messageID: string
+    messageID: string,
+    flag?: string
 }
 
 const MessageContainer: React.FC<Props> = ({
@@ -19,7 +21,8 @@ const MessageContainer: React.FC<Props> = ({
     writenDate,
     profilePic,
     id,
-    messageID }) => {
+    messageID,
+    flag }) => {
 
     const { currentUser } = useUser()
     const { currentRoom } = useRoom()
@@ -43,7 +46,7 @@ const MessageContainer: React.FC<Props> = ({
                     () => setHovering(false)
                 }
             >
-                <div className={style.messageContaienr}>
+                <div className={style.messageContaienr} style={flag ? FlagsStyle[flag] : {}}>
                     <div className={style.userInfo} >
                         <div className={style.profilePic} >
                             <Image src={profilePic} width="100%" height="100%" alt="profile-pic" />
@@ -56,6 +59,9 @@ const MessageContainer: React.FC<Props> = ({
                     <div className={style.message}>
                         {children}
                     </div>
+                    {flag &&
+                        <Image src={`/assets/flags/${flag}.svg`} width="80px" height="100px" />
+                    }
                 </div>
                 <div className={style.options}>
                     {currentUser?.id === id && isHovering &&

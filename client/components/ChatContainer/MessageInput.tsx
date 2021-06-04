@@ -21,14 +21,24 @@ const MessageInput: React.FC<Props> = ({ }) => {
         }
 
         if (messageInput.current?.value.startsWith("--")) {
-
-            const flag = messageInput.current.value.split(" ")[0].split("--")[1]
-
-            return console.log({
-                flag, // Gets the flag
-                message: messageInput.current.value.split(`${flag} `)[1]
+            const flag = messageInput.current?.value.split(" ")[0].split("--")[1]
+            const message = messageInput.current.value.split(`${flag} `)[1]
+            const info = {
+                roomID: currentRoom,
+                message,
+                flag,
+                userID: currentUser?.id,
+                firstName: currentUser?.firstName,
+                picture: currentUser?.picture
             }
-            )
+
+            socket.emit("message", info)
+
+            if (messageInput.current) {
+                messageInput.current.value = ""
+            }
+
+            return
         }
 
         const info = {

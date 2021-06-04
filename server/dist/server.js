@@ -49,6 +49,7 @@ const PORT = process.env.PORT || 5000;
         logging: true,
     }).then((_) => __awaiter(void 0, void 0, void 0, function* () {
         console.log("Connected To PSQL");
+        console.log(yield message_1.Message.find({}));
     })).catch(error => console.log(error));
 }))();
 app.use(express_1.default.json());
@@ -73,6 +74,7 @@ io.on("connection", (socket) => {
     });
     socket.on("message", (msg) => __awaiter(void 0, void 0, void 0, function* () {
         const newMessage = yield message_1.Message.create({
+            flag: msg.flag,
             message: msg.message,
             roomID: msg.roomID,
             userID: msg.userID
@@ -81,13 +83,13 @@ io.on("connection", (socket) => {
             message: msg.message,
             createdAt: Date.now(),
             id: newMessage.id,
+            flag: msg.flag,
             user: {
                 id: msg.userID,
                 firstName: msg.firstName,
                 picture: msg.picture
             }
         };
-        console.log(onlineClients_1.getOnlineClients());
         io.to(msg.roomID).emit("message", payload);
     }));
     socket.on("join", (data) => __awaiter(void 0, void 0, void 0, function* () {

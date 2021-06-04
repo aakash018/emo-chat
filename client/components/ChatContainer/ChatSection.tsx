@@ -72,11 +72,11 @@ const ChatSection: React.FC<Props> = ({ }) => {
             {currentRoom &&
                 <>
                     <div className={style.chat_messages} ref={chatContainer}>
-                        {/* {console.log("Messages", messages)} */}
                         {messages.length !== 0 &&
                             messages.map((message, i) => (
                                 <MessageContainer key={i}
                                     id={message.user.id}
+                                    flag={message.flag}
                                     messageID={message.id}
                                     writerName={message.user.firstName}
                                     writenDate={message.createdAt}

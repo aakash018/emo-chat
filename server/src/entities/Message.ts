@@ -11,6 +11,9 @@ export class Message extends BaseEntity {
     @Column()
     message: string
 
+    @Column({ nullable: true })
+    flag: string
+
     @Column()
     userID: string
     @ManyToOne(() => User, user => user)

@@ -24,6 +24,10 @@ __decorate([
     __metadata("design:type", String)
 ], Message.prototype, "message", void 0);
 __decorate([
+    typeorm_1.Column({ nullable: true }),
+    __metadata("design:type", String)
+], Message.prototype, "flag", void 0);
+__decorate([
     typeorm_1.Column(),
     __metadata("design:type", String)
 ], Message.prototype, "userID", void 0);

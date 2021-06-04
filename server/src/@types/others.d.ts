@@ -29,6 +29,7 @@ declare interface IMessagePayload {
     message: string,
     createdAt: number,
     id: string,
+    flag?: string,
     user: {
         id: string,
         firstName: string,

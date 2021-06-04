@@ -58,14 +58,7 @@ const PORT = process.env.PORT || 5000;
 
 
 
-        // const messages = await _.getRepository(Message)
-        //     .createQueryBuilder("message")
-        //     .where("message.roomID = :id", { id: "44f41a79-e723-4ac7-84ae-402a94eddd6f" })
-        //     .leftJoinAndSelect('message.user', 'user')
-        //     .select(["message", "user.id", "user.displayName"])
-        //     .getMany();
-
-        // console.log(messages[0])
+        console.log(await Message.find({}))
     }).catch(error => console.log(error));
 })();
 
@@ -112,11 +105,13 @@ io.on("connection", (socket) => {
             roomID: string,
             userID: string,
             firstName: string,
-            picture: string
+            picture: string,
+            flag?: string
         }
     ) => {
         //? Save Messages
         const newMessage = await Message.create({
+            flag: msg.flag,
             message: msg.message,
             roomID: msg.roomID,
             userID: msg.userID
@@ -125,14 +120,13 @@ io.on("connection", (socket) => {
             message: msg.message,
             createdAt: Date.now(),
             id: newMessage.id,
+            flag: msg.flag,
             user: {
                 id: msg.userID,
                 firstName: msg.firstName,
                 picture: msg.picture
             }
         }
-
-        console.log(getOnlineClients())
 
         // console.log(msg)
         io.to(msg.roomID).emit("message",
