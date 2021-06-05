@@ -49,7 +49,6 @@ const PORT = process.env.PORT || 5000;
         logging: true,
     }).then((_) => __awaiter(void 0, void 0, void 0, function* () {
         console.log("Connected To PSQL");
-        console.log(yield message_1.Message.find({}));
     })).catch(error => console.log(error));
 }))();
 app.use(express_1.default.json());

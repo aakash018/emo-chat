@@ -58,7 +58,7 @@ const PORT = process.env.PORT || 5000;
 
 
 
-        console.log(await Message.find({}))
+        // console.log(await Message.find({}))
     }).catch(error => console.log(error));
 })();
 
