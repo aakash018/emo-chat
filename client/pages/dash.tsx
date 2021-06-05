@@ -50,25 +50,26 @@ const Dash: React.FC = () => {
             </Head>
             <div className={style.dash}>
                 {currentUser?.picture &&
-
-                    <div className={style.dash__head}>
-                        <div className={style.logo}>
-                            <Image src="/assets/logo.svg" alt="logo" width="50px" height="50px" />
-                            <h1>EmoChat</h1>
+                    <>
+                        <div className={style.dash__head}>
+                            <div className={style.logo}>
+                                <Image src="/assets/logo.svg" alt="logo" width="50px" height="50px" />
+                                <h1>EmoChat</h1>
+                            </div>
+                            <UserProfile picture={currentUser!.picture} displayName={currentUser!.displayName} />
                         </div>
-                        <UserProfile picture={currentUser!.picture} displayName={currentUser!.displayName} />
-                    </div>
+                        <div className="main">
+
+                        </div>
+                        <div className={style.body}>
+                            <RoomProvider>
+                                <RoomContainer />
+                                <ChatContainer />
+                            </RoomProvider>
+                        </div>
+
+                    </>
                 }
-                <div className="main">
-
-                </div>
-                <div className={style.body}>
-                    <RoomProvider>
-                        <RoomContainer />
-                        <ChatContainer />
-                    </RoomProvider>
-                </div>
-
             </div>
         </>
     )

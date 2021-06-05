@@ -1,28 +1,5 @@
 .messageWraper{
     @include flex-center(space-around, flex-start);
-
-    .options{
-        min-width: 80px;
-        width: auto;
-        @include flex-center;
-
-
-        @media (max-width: $mobile-view){
-            min-width: 40px;       
-        }
-    
-
-    }
-
-    button {
-        background-color: transparent;
-        color: $theme-color-lighter;
-
-        @media (max-width: $mobile-view){
-            font-size: 1rem;       
-        }
-
-    }
 }
 
 
@@ -34,15 +11,45 @@
     height: auto;
     
     background-color: $theme-color-light;
-
+    
     margin-bottom: 25px;
     border-radius: 10px;
     color: white;
-
+    
     @include flex-center(space-between, flex-start);
-
+    
     overflow: hidden;
-
+    
+    position: relative;
+    
+    .options{
+        width: 20px;
+        height: 20px;
+    
+        border-radius: 50%;
+        @include flex-center;
+    
+        // border: 1px solid white;
+    
+        position: absolute;
+    
+        right: 0px;
+    
+        color: white;
+        
+        
+        button {
+            @include flex-center;
+            width: 80%;
+            height: 80%;
+            border-radius: 50%;
+    
+            background-color: $theme-color;
+            color: $theme-color-lighter;
+        }
+    
+    
+    }
 
     .userInfo{
 
@@ -55,7 +62,10 @@
         display: flex;
         justify-content: space-between;
 
-
+        @media (max-width: 400px){
+           min-width: 30px;
+        }
+        
         .profilePic{
             height: 55px;
             width: 55px;
@@ -63,10 +73,16 @@
             flex-shrink: 0;
             background-color: $theme-color-lighter;
             margin-left: 10px;
-
+            
             overflow: hidden;
+            flex-shrink: 0;
+            @media (max-width: 400px){
+                width: 30px;
+                height: 30px;
+            }
+            
         }
-
+        
         
         span {
             display: block;
@@ -74,6 +90,9 @@
         
         .textStuff{
             margin-left: 10px;
+            @media (max-width: 400px){
+                display: none;
+            }
         }
         .messageTime{
             font-size: 0.8rem;
@@ -85,8 +104,20 @@
     .message{   
         margin-left: 20px;
 
-        width: 89%;
-        padding: 10px;
+        width: 95%;
+        padding: 10px 0px;
         margin-right: 20px;
+
+        z-index: 1;
+
     }
+
+    .flagPic{
+        flex-shrink: 0; 
+        position: absolute;
+        opacity: 0.4;
+        top: -5px;
+        right: 0px;
+    }
+
 }

@@ -20,5 +20,10 @@ export const FlagsStyle: styles = {
         color: "black",
     },
 
+    sad: {
+        backgroundColor: "#70888D",
+        color: "black",
+    },
+
 
 }

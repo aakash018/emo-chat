@@ -36,6 +36,7 @@ const MessageContainer: React.FC<Props> = ({
         })
     }
 
+
     return (
         <>
             <div className={style.messageWraper}
@@ -60,12 +61,14 @@ const MessageContainer: React.FC<Props> = ({
                         {children}
                     </div>
                     {flag &&
-                        <Image src={`/assets/flags/${flag}.svg`} width="80px" height="100px" />
+                        <div className={style.flagPic}>
+                            <Image src={`/assets/flags/${flag}.svg`} width="80px" height="80px" />
+                        </div>
                     }
-                </div>
-                <div className={style.options}>
                     {currentUser?.id === id && isHovering &&
-                        <button onClick={handleUnsend}>Unsend</button>
+                        <div className={style.options}>
+                            <button onClick={handleUnsend}>x</button>
+                        </div>
                     }
                 </div>
             </div>

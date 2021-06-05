@@ -12,10 +12,45 @@
     @include flex-center(space-around);
     flex-direction: column;
 
-    @media (max-width: $mobile-view){
+    .roomsToggle {
+        position: absolute;
+        top: 30px;
+        right: -50px;
+        
+        padding: 10px 25px;
+        
         display: none;
+        
+        border-radius: 0px 20px 20px 0;
+        color: white;
+        font-weight: bolder;
+        background-color: $theme-color-light;
+        
+    }
+    
+    @media (max-width: $mobile-view){
+        border-radius: 0px 20px 20px 0;
+        height: 90vh;
+        margin: 0;
+        position: absolute;
+        left: 0;
+        top: 53%;
+        transform: translate(-100%, -50%);
+        transition: transform 1s ease-in-out;
+
+
+        z-index: 2;
+
+        .roomsToggle {
+            display: block;
+        }
+
     }
 
+}
+
+.active{
+    transform: translate(0%, -50%);
 }
 
 .searchRooms{
@@ -93,6 +128,12 @@
             font-size: 0.8rem;
             align-self: flex-start;
         }
+    }
+
+    .connected{
+        background-color: $secondary-theme-color;
+        color: $theme-color;
+        font-weight: bolder;
     }
 }
 

@@ -3,7 +3,7 @@ import { useRoom } from 'context/room'
 import { useUser } from 'context/user'
 import { AlertContext } from 'pages/_app'
 import React, { FormEvent, useContext, useEffect, useRef, useState } from 'react'
-import { FaDoorOpen, FaSearch } from 'react-icons/fa'
+import { FaDoorOpen, FaSearch, FaArrowRight } from 'react-icons/fa'
 import socket from 'socket'
 import style from './style.module.scss'
 const RoomContainer = () => {
@@ -13,6 +13,7 @@ const RoomContainer = () => {
     const { currentRoom, setCurrentRoom } = useRoom()
     const { setAlert } = useContext(AlertContext)
     const [roomsList, setRoomsList] = useState<IRoom[]>([])
+    const [showRoomForMobile, setShowRoom] = useState(false)
     const searchInput = useRef<HTMLInputElement>(null)
 
 
@@ -133,6 +134,7 @@ const RoomContainer = () => {
         if (setCurrentRoom) {
             setCurrentRoom(id)
         }
+        setShowRoom(false)
         if (setAlert) {
             setAlert({
                 type: "message",
@@ -163,7 +165,12 @@ const RoomContainer = () => {
     }
 
     return (
-        <div className={style.rooms}>
+        <div className={`${style.rooms} ${showRoomForMobile ? style.active : ""}`}>
+            <button
+                className={style.roomsToggle}
+                onClick={() => setShowRoom(prev => !prev)}>
+                {showRoomForMobile ? "x" : <FaArrowRight />}
+            </button>
             <div className={style.searchRooms}>
                 <form onSubmit={handleSerach}>
                     <input type="text" placeholder="Search by Name" ref={searchInput} />
@@ -174,7 +181,8 @@ const RoomContainer = () => {
             <div className={style.listRooms}>
                 {
                     roomsList?.map(room => (
-                        <button key={room.id} onClick={() => connectToRoom(room.id)}>
+                        <button key={room.id} onClick={() => connectToRoom(room.id)}
+                            className={room.id === currentRoom ? `${style.connected}` : ""}>
                             <section className={style.profilePic}></section>
                             <section className={style.roomInfo} >
                                 <span>{room.name}</span>
