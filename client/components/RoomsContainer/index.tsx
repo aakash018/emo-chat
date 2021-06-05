@@ -1,4 +1,5 @@
 import axios from 'axios'
+import ToggleSlider from 'components/ToggleSlider'
 import { useRoom } from 'context/room'
 import { useUser } from 'context/user'
 import { AlertContext } from 'pages/_app'
@@ -58,11 +59,11 @@ const RoomContainer = () => {
     }, [])
 
 
-    // useEffect(() => {
-    //     socket.on("user-left-room", (data: { ok: boolean, roomID: string }) => {
-    //         setRoomsList(prev => prev.filter(room => room.id !== data.roomID))
-    //     })
-    // }, [])
+    useEffect(() => {
+        socket.on("user-left-room", (data: { ok: boolean, roomID: string }) => {
+            setRoomsList(prev => prev.filter(room => room.id !== data.roomID))
+        })
+    }, [])
 
     const addRoom = async () => {
 
@@ -166,11 +167,7 @@ const RoomContainer = () => {
 
     return (
         <div className={`${style.rooms} ${showRoomForMobile ? style.active : ""}`}>
-            <button
-                className={style.roomsToggle}
-                onClick={() => setShowRoom(prev => !prev)}>
-                {showRoomForMobile ? "x" : <FaArrowRight />}
-            </button>
+            <ToggleSlider toggle={showRoomForMobile} toggleSetState={setShowRoom} />
             <div className={style.searchRooms}>
                 <form onSubmit={handleSerach}>
                     <input type="text" placeholder="Search by Name" ref={searchInput} />

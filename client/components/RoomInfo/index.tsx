@@ -7,6 +7,7 @@ import { GoSignOut } from "react-icons/go"
 import socket from "socket"
 import UserInfo from "./UserInfo"
 import style from "./style.module.scss"
+import ToggleSlider from "components/ToggleSlider"
 
 
 
@@ -26,6 +27,7 @@ const RoomInfo: React.FC<Props> = ({ }) => {
     const [onlineUsers, setOnlineUsers] = useState<IOnlineClients[]>([])
 
     const [roomsUsers, setRoomsUsers] = useState<IRoomUsers[]>([])
+    const [toggle, setToggle] = useState(false) //? For Mobile
 
     useEffect(() => {
 
@@ -74,6 +76,7 @@ const RoomInfo: React.FC<Props> = ({ }) => {
         }
 
         socket.emit("user-left-room", payload)
+
         if (setCurrentRoom) {
             setCurrentRoom(null)
         }
@@ -92,7 +95,10 @@ const RoomInfo: React.FC<Props> = ({ }) => {
 
 
     return (
-        <div className={style.room_info_container}>
+        <div className={`${style.room_info_container} ${toggle ? style.active : ""}`}>
+            <span>
+                <ToggleSlider toggleSetState={setToggle} toggle={toggle} />
+            </span>
             <MainButton type="button" onClick={handleLeaveRoom}> <GoSignOut color="red" /> Leave Room</MainButton>
             <div className={style.room_users}>
                 {roomsUsers.length !== 0 &&

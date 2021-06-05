@@ -4,8 +4,26 @@
     flex-direction: column;
 
     @media (max-width: $mobile-view){
-        display: none;
+        position: absolute;
+        margin: 0;
+        top: 35%;
+        right: -20px;
+        transform: translate(100%, -50%);
+        transition: transform 1s ease-in-out;
+
+        background-color: $theme-color-light;
+        z-index: 2;
+
+        span button {
+            left: -50px;
+            
+            transform: rotate(180deg);
+        }
     }
+}
+
+.active{
+    transform: translate(0%, -50%);
 }
 
 

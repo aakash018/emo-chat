@@ -1,0 +1,19 @@
+.roomsToggle {
+    position: absolute;
+    top: 30px;
+    right: -50px;
+    
+    padding: 10px 25px;
+    
+    display: none;
+    
+    border-radius: 0px 20px 20px 0;
+    color: white;
+    font-weight: bolder;
+    background-color: $theme-color-light;
+
+    @media (max-width: $mobile-view){
+        display: block;
+    }
+    
+}
