@@ -150,7 +150,6 @@ io.on("connection", (socket) => {
             .findOne({ id: data.userID }, { relations: ["rooms"] })
 
         if (joinedRooms?.rooms.every(room => room.roomID !== data.id)) {
-            console.log("--------------Emmited-------------------")
             io.to(data.id).emit("a-user-joined", {
                 ok: true, user: {
                     userID: data.userID,

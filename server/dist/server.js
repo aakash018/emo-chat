@@ -104,7 +104,6 @@ io.on("connection", (socket) => {
             .getRepository(Users_1.User)
             .findOne({ id: data.userID }, { relations: ["rooms"] });
         if (joinedRooms === null || joinedRooms === void 0 ? void 0 : joinedRooms.rooms.every(room => room.roomID !== data.id)) {
-            console.log("--------------Emmited-------------------");
             io.to(data.id).emit("a-user-joined", {
                 ok: true, user: {
                     userID: data.userID,
