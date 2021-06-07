@@ -91,6 +91,10 @@ io.on("connection", (socket) => {
         io.to(msg.roomID).emit("message", payload);
     }));
     socket.on("join", (data) => __awaiter(void 0, void 0, void 0, function* () {
+        const doesRoomExists = yield Rooms_1.Room.findOne(data.id);
+        if (!doesRoomExists) {
+            return;
+        }
         socket.join(data.id);
         socket.join(data.userID);
         if (data.currentRoom) {
@@ -99,8 +103,8 @@ io.on("connection", (socket) => {
         const joinedRooms = yield typeorm_1.getConnection()
             .getRepository(Users_1.User)
             .findOne({ id: data.userID }, { relations: ["rooms"] });
-        console.log(joinedRooms);
         if (joinedRooms === null || joinedRooms === void 0 ? void 0 : joinedRooms.rooms.every(room => room.roomID !== data.id)) {
+            console.log("--------------Emmited-------------------");
             io.to(data.id).emit("a-user-joined", {
                 ok: true, user: {
                     userID: data.userID,

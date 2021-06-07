@@ -38,6 +38,16 @@ route.post("/add", validateUser, async (req, res) => {
 
 route.post("/joinRoom", validateUser, async (req, res) => {
     const { roomID }: { roomID: string } = req.body
+
+    const doesRoomExists = await Room.findOne(roomID)
+
+    if (!doesRoomExists) {
+        return res.json({
+            ok: false,
+            message: "roo does not exists"
+        })
+    }
+
     const joinedRooms = await getConnection()
         .getRepository(User)
         .findOne({ id: req.user?.id }, { relations: ["rooms"] })
@@ -49,16 +59,20 @@ route.post("/joinRoom", validateUser, async (req, res) => {
                 roomID,
                 userID: req.user?.id
             }).save()
+            res.json({
+                ok: true,
+                message: "Room joined"
+            })
         } catch (e) {
             console.log(e)
             res.json({
-                ok: false,
+                ok: true,
                 message: "Error while saving"
             })
         }
     } else {
         res.json({
-            ok: false,
+            ok: true,
             message: "room alreaddy joined"
         })
     }

@@ -28,11 +28,9 @@ const RoomInfo: React.FC<Props> = ({ }) => {
     const [roomsUsers, setRoomsUsers] = useState<IRoomUsers[]>([])
 
     useEffect(() => {
-
         socket.emit("getOnlineClients", { userID: currentUser?.id })
 
         socket.on("online-clients", (data: { ok: boolean, clients: IOnlineClients[] }) => {
-            console.log("Offlene", data)
             if (data.ok)
                 setOnlineUsers(data.clients)
         })
@@ -96,7 +94,6 @@ const RoomInfo: React.FC<Props> = ({ }) => {
         <div className={style.room_info_container}>
             <MainButton type="button" onClick={handleLeaveRoom}> <GoSignOut color="red" /> Leave Room</MainButton>
             <div className={style.room_users}>
-                {console.log(roomsUsers)}
                 {roomsUsers.length !== 0 &&
                     roomsUsers.map((users) => (
                         <UserInfo

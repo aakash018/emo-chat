@@ -55,17 +55,6 @@ const PORT = process.env.PORT || 5000;
         // await Message.delete({})
         // await Room.delete({})
         // await User.delete({})
-
-
-
-        // const messages = await _.getRepository(Message)
-        //     .createQueryBuilder("message")
-        //     .where("message.roomID = :id", { id: "44f41a79-e723-4ac7-84ae-402a94eddd6f" })
-        //     .leftJoinAndSelect('message.user', 'user')
-        //     .select(["message", "user.id", "user.displayName"])
-        //     .getMany();
-
-        // console.log(messages[0])
     }).catch(error => console.log(error));
 })();
 
@@ -141,6 +130,14 @@ io.on("connection", (socket) => {
     })
 
     socket.on("join", async (data: ISocketJoinPayload) => {
+
+        const doesRoomExists = await Room.findOne(data.id)
+
+        if (!doesRoomExists) {
+            return
+        }
+
+
         socket.join(data.id);
         socket.join(data.userID)
         if (data.currentRoom) {
@@ -152,8 +149,8 @@ io.on("connection", (socket) => {
             .getRepository(User)
             .findOne({ id: data.userID }, { relations: ["rooms"] })
 
-        console.log(joinedRooms)
         if (joinedRooms?.rooms.every(room => room.roomID !== data.id)) {
+            console.log("--------------Emmited-------------------")
             io.to(data.id).emit("a-user-joined", {
                 ok: true, user: {
                     userID: data.userID,
