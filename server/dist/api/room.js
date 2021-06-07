@@ -49,6 +49,13 @@ route.post("/add", verifyUser_1.validateUser, (req, res) => __awaiter(void 0, vo
 route.post("/joinRoom", verifyUser_1.validateUser, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _c, _d;
     const { roomID } = req.body;
+    const doesRoomExists = yield Rooms_1.Room.findOne(roomID);
+    if (!doesRoomExists) {
+        return res.json({
+            ok: false,
+            message: "roo does not exists"
+        });
+    }
     const joinedRooms = yield typeorm_1.getConnection()
         .getRepository(Users_1.User)
         .findOne({ id: (_c = req.user) === null || _c === void 0 ? void 0 : _c.id }, { relations: ["rooms"] });
@@ -58,18 +65,22 @@ route.post("/joinRoom", verifyUser_1.validateUser, (req, res) => __awaiter(void 
                 roomID,
                 userID: (_d = req.user) === null || _d === void 0 ? void 0 : _d.id
             }).save();
+            res.json({
+                ok: true,
+                message: "Room joined"
+            });
         }
         catch (e) {
             console.log(e);
             res.json({
-                ok: false,
+                ok: true,
                 message: "Error while saving"
             });
         }
     }
     else {
         res.json({
-            ok: false,
+            ok: true,
             message: "room alreaddy joined"
         });
     }

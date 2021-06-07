@@ -47,7 +47,7 @@ const PORT = process.env.PORT || 5000;
         database: "emochat",
         entities: [User, Room, Message, Joined],
         synchronize: true,
-        logging: true,
+        logging: false,
 
     }).then(async (_) => {
         console.log("Connected To PSQL")
@@ -55,10 +55,6 @@ const PORT = process.env.PORT || 5000;
         // await Message.delete({})
         // await Room.delete({})
         // await User.delete({})
-
-
-
-        // console.log(await Message.find({}))
     }).catch(error => console.log(error));
 })();
 
@@ -135,6 +131,14 @@ io.on("connection", (socket) => {
     })
 
     socket.on("join", async (data: ISocketJoinPayload) => {
+
+        const doesRoomExists = await Room.findOne(data.id)
+
+        if (!doesRoomExists) {
+            return
+        }
+
+
         socket.join(data.id);
         socket.join(data.userID)
         if (data.currentRoom) {
@@ -142,11 +146,11 @@ io.on("connection", (socket) => {
         }
 
         //? To Update room's users list
-
         const joinedRooms = await getConnection()
             .getRepository(User)
             .findOne({ id: data.userID }, { relations: ["rooms"] })
-
+        console.log(data.id)
+        console.log(joinedRooms?.rooms.every(room => room.roomID !== data.id))
         if (joinedRooms?.rooms.every(room => room.roomID !== data.id)) {
             io.to(data.id).emit("a-user-joined", {
                 ok: true, user: {

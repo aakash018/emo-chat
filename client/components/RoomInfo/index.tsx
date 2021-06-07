@@ -30,7 +30,6 @@ const RoomInfo: React.FC<Props> = ({ }) => {
     const [toggle, setToggle] = useState(false) //? For Mobile
 
     useEffect(() => {
-
         socket.emit("getOnlineClients", { userID: currentUser?.id })
 
         socket.on("online-clients", (data: { ok: boolean, clients: IOnlineClients[] }) => {
