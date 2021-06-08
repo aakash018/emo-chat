@@ -1,4 +1,3 @@
-import axios from "axios"
 import MainButton from "components/MainButton"
 import { useRoom } from "context/room"
 import { useUser } from "context/user"
@@ -8,6 +7,7 @@ import socket from "socket"
 import UserInfo from "./UserInfo"
 import style from "./style.module.scss"
 import ToggleSlider from "components/ToggleSlider"
+import { useFetch } from "hooks/useFetch"
 
 
 
@@ -53,16 +53,14 @@ const RoomInfo: React.FC<Props> = ({ }) => {
     useEffect(() => {
         (
             async () => {
-                const res = await axios.
-                    get("http://localhost:5000/api/room/users", {
-                        headers: {
-                            "Authorization": `Bearer ${localStorage.getItem("token")}`
-                        },
-                        params: {
-                            roomID: currentRoom
-                        }
-                    })
-                setRoomsUsers(res.data.users)
+                const res = await useFetch
+                    <{ ok: boolean, users: IRoomUsers[] }>
+                    (
+                        "GET",
+                        "api/room/users",
+                        { roomID: currentRoom }
+                    )
+                setRoomsUsers(res!.data.users)
             }
         )()
     }, [currentRoom])

@@ -1,5 +1,5 @@
-import axios from "axios"
 import { useRoom } from "context/room"
+import { useFetch } from "hooks/useFetch"
 import { useEffect, useRef, useState } from "react"
 import socket from "socket"
 import MessageContainer from "./MessageContainer"
@@ -42,16 +42,16 @@ const ChatSection: React.FC<Props> = ({ }) => {
         (async () => {
             if (currentRoom) {
                 setLoading(true)
-                const res = await axios.get<{ ok: boolean, messages: Array<IMessage> }>("http://localhost:5000/api/room/messages", {
-                    headers: {
-                        "Authorization": `Bearer ${localStorage.getItem("token")}`
-                    },
-                    params: {
-                        roomID: currentRoom
-                    }
-                })
+                const res = await useFetch
+                    <{ ok: boolean, messages: Array<IMessage> }>
+                    (
+                        "GET",
+                        "api/room/messages",
+                        { roomID: currentRoom }
+                    )
+
                 setLoading(false)
-                setMessages(res.data.messages)
+                setMessages(res!.data.messages)
                 chatContainer.current?.scrollTo(0, chatContainer.current.scrollHeight)
 
             }

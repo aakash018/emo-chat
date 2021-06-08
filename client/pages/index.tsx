@@ -16,7 +16,6 @@ const Home = () => {
     useEffect(() => {
         (async () => {
             setLoading(true)
-            console.log("Ran")
             const decoded = await refreshToken()
             if (decoded?.user) {
                 const { user } = decoded

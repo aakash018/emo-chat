@@ -46,7 +46,7 @@ const PORT = process.env.PORT || 5000;
         database: "emochat",
         entities: [Users_1.User, Rooms_1.Room, message_1.Message, Joined_1.Joined],
         synchronize: true,
-        logging: false,
+        logging: true,
     }).then((_) => __awaiter(void 0, void 0, void 0, function* () {
         console.log("Connected To PSQL");
     })).catch(error => console.log(error));

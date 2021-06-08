@@ -37,7 +37,6 @@ const Room: React.FC = ({ }) => {
     useEffect(() => {
         (
             async () => {
-                console.log("TEST", Boolean(id), Boolean(currentUser))
                 if (id && typeof id === "string" && currentUser) {
                     const payload = {
                         userID: currentUser?.id,

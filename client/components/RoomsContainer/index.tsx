@@ -1,7 +1,7 @@
-import axios from 'axios'
 import ToggleSlider from 'components/ToggleSlider'
 import { useRoom } from 'context/room'
 import { useUser } from 'context/user'
+import { useFetch } from 'hooks/useFetch'
 import { AlertContext } from 'pages/_app'
 import React, { FormEvent, useContext, useEffect, useRef, useState } from 'react'
 import { FaDoorOpen, FaSearch, FaArrowRight } from 'react-icons/fa'
@@ -28,12 +28,16 @@ const RoomContainer = () => {
                             message: ""
                         })
                     }
-                    const res = await axios.get(`http://localhost:5000/api/room/getRooms`, {
-                        headers: {
-                            "Authorization": `Bearer ${localStorage.getItem("token")}`
-                        }
-                    })
-                    if (!res.data.ok) {
+
+                    const res = await useFetch
+                        <{ ok: boolean, rooms: IRoom[] }>
+                        (
+                            "GET",
+                            "api/room/getRooms"
+                        )
+
+
+                    if (!(res!.data.ok)) {
                         if (setAlert) {
                             setAlert({
                                 type: "error",
@@ -43,7 +47,7 @@ const RoomContainer = () => {
                         return
                     }
                     if (setRoomsList) {
-                        setRoomsList(res.data.rooms)
+                        setRoomsList(res!.data.rooms)
                     }
                 } catch (e) {
                     console.error(e)
@@ -76,18 +80,17 @@ const RoomContainer = () => {
                 creator: currentUser?.displayName,
                 serverName: name.current?.value,
             }
-
-            const res = await axios
-                .post("http://localhost:5000/api/room/add",
-                    payload, {
-                    headers: {
-                        "Authorization": `Bearer ${localStorage.getItem("token")}`
-                    }
-                }
+            const res = await useFetch
+                <{ ok: boolean, room: IRoom }>
+                (
+                    "POST",
+                    "api/room/add",
+                    payload
                 )
-            console.log(res.data)
 
-            if (!res.data.ok) {
+            console.log(res!.data)
+
+            if (!(res!.data.ok)) {
                 if (setAlert) {
                     setAlert({
                         type: "error",
@@ -97,9 +100,9 @@ const RoomContainer = () => {
                 return
             }
 
-            if (res.data.ok) {
+            if (res!.data.ok) {
                 if (setRoomsList) {
-                    setRoomsList(prev => prev!.concat(res.data.room))
+                    setRoomsList(prev => prev!.concat(res!.data.room))
                 }
             }
 
@@ -126,12 +129,15 @@ const RoomContainer = () => {
         }
         socket.emit("join", payload)
 
-        const res = await axios.post("http://localhost:5000/api/room/joinRoom", { roomID: id }, {
-            headers: {
-                "Authorization": `Bearer ${localStorage.getItem("token")}`
-            }
-        })
-        console.log(res.data)
+        const res = await useFetch
+            <{ ok: boolean, message: string }>
+            (
+                "POST",
+                "api/room/joinRoom",
+                { roomID: id }
+            )
+
+        console.log(res!.data)
         if (setCurrentRoom) {
             setCurrentRoom(id)
         }
@@ -151,17 +157,10 @@ const RoomContainer = () => {
             return
         }
 
-        const res = await axios.get<{ ok: boolean, rooms: IRoom[] }>("http://localhost:5000/api/room/search", {
-            headers: {
-                "Authorization": `Bearer ${localStorage.getItem("token")}`
-            },
-            params: {
-                searchQuery: searchInput.current?.value
-            }
-        }
-        )
-        if (res.data.ok) {
-            setRoomsList(res.data.rooms)
+        const res = await useFetch<{ ok: boolean, rooms: IRoom[] }>("GET", "api/room/search", { searchQuery: searchInput.current?.value })
+        console.log(res)
+        if (res!.data.ok) {
+            setRoomsList(res!.data.rooms)
         }
     }
 
