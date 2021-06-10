@@ -1,5 +1,5 @@
 import axios from "axios";
-import jwt_decode from "jwt-decode"
+import jwt_decode from "jwt-decode";
 
 interface IJWT {
     user: IUser,
@@ -10,7 +10,7 @@ interface IJWT {
 
 export const refreshToken = async () => {
     console.log("This Ran")
-    const res = await axios.get<{ token: string }>("http://localhost:5000/auth/getToken", {
+    const res = await axios.get<{ token: string }>(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/auth/getToken`, {
         withCredentials: true
     })
     if (!res.data.token) {

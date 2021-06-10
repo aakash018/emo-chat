@@ -1,13 +1,12 @@
 import { useUser } from 'context/user'
-import { useRouter } from 'next/router'
 import Head from "next/head"
+import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { refreshToken } from 'utils/refresh_token'
 import Login from '../components/Login/index'
 import '../sass/index.module.scss'
 import style from "../sass/Login.module.scss"
 const Home = () => {
-
     const router = useRouter()
     const { setCurrentUser } = useUser()
 

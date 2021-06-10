@@ -1,15 +1,15 @@
-import { useRouter } from "next/router"
-import { useEffect } from "react";
-import Image from "next/image"
-import Head from "next/head"
-import { useUser } from "context/user";
-
-import style from "../sass/dash.module.scss"
-import UserProfile from "components/UserProfile";
-import { refreshToken } from "utils/refresh_token";
 import ChatContainer from "components/ChatContainer";
 import RoomContainer from "components/RoomsContainer";
+import UserProfile from "components/UserProfile";
+import { useUser } from "context/user";
+import Head from "next/head";
+import Image from "next/image";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 import socket from "socket";
+import { refreshToken } from "utils/refresh_token";
+import style from "../sass/dash.module.scss";
+
 
 
 

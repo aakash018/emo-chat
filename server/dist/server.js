@@ -12,21 +12,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
+const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const cors_1 = __importDefault(require("cors"));
+const express_1 = __importDefault(require("express"));
 const http_1 = __importDefault(require("http"));
 const passport_1 = __importDefault(require("passport"));
-const cookie_parser_1 = __importDefault(require("cookie-parser"));
-const socket_io_1 = require("socket.io");
-require("./config/passport");
 require("reflect-metadata");
+const socket_io_1 = require("socket.io");
+const typeorm_1 = require("typeorm");
 const auth_1 = __importDefault(require("./api/auth"));
 const room_1 = __importDefault(require("./api/room"));
-const typeorm_1 = require("typeorm");
-const Users_1 = require("./entities/Users");
-const Rooms_1 = require("./entities/Rooms");
-const message_1 = require("./entities/message");
+require("./config/passport");
 const Joined_1 = require("./entities/Joined");
+const message_1 = require("./entities/message");
+const Rooms_1 = require("./entities/Rooms");
+const Users_1 = require("./entities/Users");
 const onlineClients_1 = require("./onlineClients");
 const app = express_1.default();
 app.use(cookie_parser_1.default());
@@ -104,7 +104,7 @@ io.on("connection", (socket) => {
         const joinedRooms = yield typeorm_1.getConnection()
             .getRepository(Users_1.User)
             .findOne({ id: data.userID }, { relations: ["rooms"] });
-        console.log(data.id);
+        console.log(joinedRooms === null || joinedRooms === void 0 ? void 0 : joinedRooms.rooms.every(room => room.roomID !== data.id), data.id);
         console.log(joinedRooms === null || joinedRooms === void 0 ? void 0 : joinedRooms.rooms.every(room => room.roomID !== data.id));
         if (joinedRooms === null || joinedRooms === void 0 ? void 0 : joinedRooms.rooms.every(room => room.roomID !== data.id)) {
             io.to(data.id).emit("a-user-joined", {

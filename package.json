@@ -9,5 +9,6 @@
     "ts": "cd server && npm run wch"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {}
 }

@@ -1,13 +1,14 @@
 import MainButton from "components/MainButton"
+import ToggleSlider from "components/ToggleSlider"
 import { useRoom } from "context/room"
 import { useUser } from "context/user"
-import { useEffect, useState } from "react"
+import { useFetch } from "hooks/useFetch"
+import { AlertContext } from "pages/_app"
+import { useContext, useEffect, useRef, useState } from "react"
 import { GoSignOut } from "react-icons/go"
 import socket from "socket"
-import UserInfo from "./UserInfo"
 import style from "./style.module.scss"
-import ToggleSlider from "components/ToggleSlider"
-import { useFetch } from "hooks/useFetch"
+import UserInfo from "./UserInfo"
 
 
 
@@ -24,9 +25,11 @@ const RoomInfo: React.FC<Props> = ({ }) => {
 
     const { setCurrentRoom, currentRoom } = useRoom()
     const { currentUser } = useUser()
+    const { setAlert } = useContext(AlertContext)
     const [onlineUsers, setOnlineUsers] = useState<IOnlineClients[]>([])
 
     const [roomsUsers, setRoomsUsers] = useState<IRoomUsers[]>([])
+    const roomInvitelink = useRef<HTMLTextAreaElement>(null)
     const [toggle, setToggle] = useState(false) //? For Mobile
 
     useEffect(() => {
@@ -90,13 +93,33 @@ const RoomInfo: React.FC<Props> = ({ }) => {
         return isOnline
     }
 
+    const handleCopyInvite = () => {
+        roomInvitelink.current?.select()
+        roomInvitelink.current?.setSelectionRange(0, 99999);
+        document.execCommand("copy")
+        if (setAlert) setAlert({
+            type: "message",
+            message: "Invite link copied"
+        })
+    }
+
 
     return (
         <div className={`${style.room_info_container} ${toggle ? style.active : ""}`}>
             <span>
                 <ToggleSlider toggleSetState={setToggle} toggle={toggle} />
             </span>
-            <MainButton type="button" onClick={handleLeaveRoom}> <GoSignOut color="red" /> Leave Room</MainButton>
+            <div className={style.options}>
+                <MainButton type="button" onClick={handleLeaveRoom}> <GoSignOut color="red" /> Leave Room</MainButton>
+                <section>
+                    <textarea cols={10} rows={1}
+                        value={`${window.location.origin}/room/${currentRoom}`}
+                        ref={roomInvitelink}
+                        readOnly
+                    />
+                    <MainButton type={"button"} onClick={handleCopyInvite}>Copy Invite Link</MainButton>
+                </section>
+            </div>
             <div className={style.room_users}>
                 {roomsUsers.length !== 0 &&
                     roomsUsers.map((users) => (

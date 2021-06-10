@@ -10,7 +10,7 @@ export const useFetch = async <T>(
 
     let res;
     if (method === "GET") {
-        res = await axios.get(`http://localhost:5000/${path}`, {
+        res = await axios.get(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/${path}`, {
             headers: {
                 "Authorization": `Bearer ${localStorage.getItem("token")}`
             },

@@ -22,6 +22,22 @@
     }
 }
 
+.options{
+
+    margin-top: 10px;
+
+    height: 80px;
+
+    @include flex-center(space-between, center);
+    flex-direction: column;
+
+    textarea{
+        opacity: 0;
+        pointer-events: none;
+    }
+
+}
+
 .active{
     transform: translate(0%, -50%);
 }

@@ -1,27 +1,25 @@
 
-import express from "express"
+import cookieParser from "cookie-parser"
 import cors from 'cors'
+import express from "express"
 import http from 'http'
 import passport from "passport"
-import cookieParser from "cookie-parser"
-import { Server } from "socket.io"
-import "./config/passport"
 import "reflect-metadata"
+import { Server } from "socket.io"
+import { createConnection, getConnection } from "typeorm"
 // import * as dotenv from "dotenv"
-
 // dotenv.config()
-
 // Route
 import auth from './api/auth'
 import room from "./api/room"
-
-
-import { createConnection, getConnection } from "typeorm"
-import { User } from "./entities/Users"
-import { Room } from "./entities/Rooms"
-import { Message } from "./entities/message"
+import "./config/passport"
 import { Joined } from "./entities/Joined"
-import { getOnlineClients, addOnlienClients, removeOnlineClient } from "./onlineClients"
+import { Message } from "./entities/message"
+import { Room } from "./entities/Rooms"
+import { User } from "./entities/Users"
+import { addOnlienClients, getOnlineClients, removeOnlineClient } from "./onlineClients"
+
+
 
 
 
@@ -149,7 +147,7 @@ io.on("connection", (socket) => {
         const joinedRooms = await getConnection()
             .getRepository(User)
             .findOne({ id: data.userID }, { relations: ["rooms"] })
-        console.log(data.id)
+        console.log(joinedRooms?.rooms.every(room => room.roomID !== data.id), data.id)
         console.log(joinedRooms?.rooms.every(room => room.roomID !== data.id))
         if (joinedRooms?.rooms.every(room => room.roomID !== data.id)) {
             io.to(data.id).emit("a-user-joined", {
