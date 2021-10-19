@@ -53,10 +53,10 @@ const PORT = process.env.PORT || 5000;
 
     ).then(async (_) => {
         console.log("Connected To PSQL")
-        await Joined.delete({})
-        await Message.delete({})
-        await Room.delete({})
-        await User.delete({})
+        // await Joined.delete({})
+        // await Message.delete({})
+        // await Room.delete({})
+        // await User.delete({})
     }).catch(error => console.log(error));
 })();
 
