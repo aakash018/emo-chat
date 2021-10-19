@@ -42,6 +42,7 @@ const PORT = process.env.PORT || 5000;
         yield conn.runMigrations();
     })).catch(error => console.log(error));
 }))();
+app.set("trust proxy", 1);
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: false }));
 const io = new socket_io_1.Server(server, {

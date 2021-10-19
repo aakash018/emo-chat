@@ -62,7 +62,8 @@ const PORT = process.env.PORT || 5000;
 })();
 
 
-// // Parser MiddleWare
+// Parser MiddleWare
+app.set("trust proxy", 1)
 app.use(express.json() as RequestHandler)
 app.use(express.urlencoded({ extended: false }) as RequestHandler );
 
