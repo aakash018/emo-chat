@@ -37,8 +37,9 @@ app.use(cors_1.default({
 const server = http_1.default.createServer(app);
 const PORT = process.env.PORT || 5000;
 (() => __awaiter(void 0, void 0, void 0, function* () {
-    yield typeorm_1.createConnection().then((_) => __awaiter(void 0, void 0, void 0, function* () {
+    yield typeorm_1.createConnection().then((conn) => __awaiter(void 0, void 0, void 0, function* () {
         console.log("Connected To PSQL");
+        yield conn.runMigrations();
     })).catch(error => console.log(error));
 }))();
 app.use(express_1.default.json());

@@ -51,8 +51,9 @@ const PORT = process.env.PORT || 5000;
         //         "migrationsDir": "migration"
         //     }
 
-    ).then(async (_) => {
+    ).then(async (conn) => {
         console.log("Connected To PSQL")
+        await conn.runMigrations();
         // await Joined.delete({})
         // await Message.delete({})
         // await Room.delete({})
