@@ -22,7 +22,6 @@ passport_1.default.use(new passport_google_oauth2_1.Strategy({
     callbackURL: `${process.env.SERVER_END_POINT}/auth/google/callback`,
     passReqToCallback: true,
 }, (_, __, ___, profile, done) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(process.env.GOODLE_CLIENT_SECRET);
     const { displayName, given_name, family_name, email, picture } = profile;
     try {
         if (yield Users_1.User.findOne({ where: { email } })) {

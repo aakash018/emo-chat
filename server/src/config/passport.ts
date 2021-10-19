@@ -11,7 +11,6 @@ passport.use(new Strategy({
     passReqToCallback: true,
 },
     async (_: any, __: any, ___: any, profile: any, done: any) => {
-        console.log(process.env.GOODLE_CLIENT_SECRET)
         const { displayName, given_name, family_name, email, picture } = profile
         try {
             if (await User.findOne({ where: { email } })) {
