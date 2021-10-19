@@ -9,42 +9,52 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Room = void 0;
+exports.Message = void 0;
 const typeorm_1 = require("typeorm");
-const Joined_1 = require("./Joined");
-const Message_1 = require("./Message");
-let Room = class Room extends typeorm_1.BaseEntity {
+const Rooms_1 = require("./Rooms");
+const Users_1 = require("./Users");
+let Message = class Message extends typeorm_1.BaseEntity {
 };
 __decorate([
     typeorm_1.PrimaryGeneratedColumn("uuid"),
     __metadata("design:type", String)
-], Room.prototype, "id", void 0);
+], Message.prototype, "id", void 0);
 __decorate([
     typeorm_1.Column(),
     __metadata("design:type", String)
-], Room.prototype, "name", void 0);
+], Message.prototype, "message", void 0);
+__decorate([
+    typeorm_1.Column({ nullable: true }),
+    __metadata("design:type", String)
+], Message.prototype, "flag", void 0);
 __decorate([
     typeorm_1.Column(),
     __metadata("design:type", String)
-], Room.prototype, "owner", void 0);
+], Message.prototype, "userID", void 0);
 __decorate([
-    typeorm_1.OneToMany(() => Message_1.Message, message => message.room),
-    __metadata("design:type", Array)
-], Room.prototype, "messages", void 0);
+    typeorm_1.ManyToOne(() => Users_1.User, user => user),
+    typeorm_1.JoinColumn({ name: "userID" }),
+    __metadata("design:type", Users_1.User)
+], Message.prototype, "user", void 0);
 __decorate([
-    typeorm_1.OneToMany(() => Joined_1.Joined, joined => joined.users),
-    __metadata("design:type", Array)
-], Room.prototype, "users", void 0);
+    typeorm_1.Column(),
+    __metadata("design:type", String)
+], Message.prototype, "roomID", void 0);
+__decorate([
+    typeorm_1.ManyToOne(() => Rooms_1.Room, room => room.messages),
+    typeorm_1.JoinColumn({ name: "roomID" }),
+    __metadata("design:type", Rooms_1.Room)
+], Message.prototype, "room", void 0);
 __decorate([
     typeorm_1.CreateDateColumn(),
     __metadata("design:type", Date)
-], Room.prototype, "createdAt", void 0);
+], Message.prototype, "createdAt", void 0);
 __decorate([
     typeorm_1.UpdateDateColumn(),
     __metadata("design:type", Date)
-], Room.prototype, "updatedAt", void 0);
-Room = __decorate([
+], Message.prototype, "updatedAt", void 0);
+Message = __decorate([
     typeorm_1.Entity()
-], Room);
-exports.Room = Room;
-//# sourceMappingURL=Rooms.js.map
+], Message);
+exports.Message = Message;
+//# sourceMappingURL=Message.js.map

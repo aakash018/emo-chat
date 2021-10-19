@@ -18,7 +18,7 @@ const typeorm_1 = require("typeorm");
 const verifyUser_1 = require("../utils/verifyUser");
 const Joined_1 = require("../entities/Joined");
 const Users_1 = require("../entities/Users");
-const message_1 = require("../entities/message");
+const Message_1 = require("../entities/Message");
 const route = express_1.default();
 route.post("/add", verifyUser_1.validateUser, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b;
@@ -125,7 +125,7 @@ route.get("/getRooms", verifyUser_1.validateUser, (req, res) => __awaiter(void 0
 }));
 route.get("/messages", verifyUser_1.validateUser, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { roomID } = req.query;
-    const messages = yield typeorm_1.getConnection().getRepository(message_1.Message)
+    const messages = yield typeorm_1.getConnection().getRepository(Message_1.Message)
         .createQueryBuilder("message")
         .where("message.roomID = :id", { id: roomID })
         .leftJoinAndSelect('message.user', 'user')

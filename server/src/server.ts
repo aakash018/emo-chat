@@ -1,7 +1,7 @@
 
 import cookieParser from "cookie-parser"
 import cors from 'cors'
-import express from "express"
+import express, { RequestHandler } from "express"
 import http from 'http'
 import passport from "passport"
 import "reflect-metadata"
@@ -14,7 +14,7 @@ import auth from './api/auth'
 import room from "./api/room"
 import "./config/passport"
 import { Joined } from "./entities/Joined"
-import { Message } from "./entities/message"
+import { Message } from "./entities/Message"
 import { Room } from "./entities/Rooms"
 import { User } from "./entities/Users"
 import { addOnlienClients, getOnlineClients, removeOnlineClient } from "./onlineClients"
@@ -36,30 +36,34 @@ const PORT = process.env.PORT || 5000;
 
 // DataBase
 (async () => {
-    await createConnection({
-        type: "postgres",
-        host: "localhost",
-        port: 5432,
-        username: "postgres",
-        password: "Thisisme@123",
-        database: "emochat",
-        entities: [User, Room, Message, Joined],
-        synchronize: true,
-        logging: true,
+    await createConnection(
+        // type: "postgres",
+        // host: process.env.POSTGRESS_HOST,
+        // port: 5432,
+        // username: process.env.POSTGRESS_USER,
+        // password: process.env.POSTGRESS_PASSWORD,
+        // database: process.env.POSTGRESS_DATABASE,
+        // entities: [User, Room, Message, Joined],
+        // synchronize: true,
+        // logging: true,
+        // "migrations": ["migrations/*.ts"],
+        // "cli": {
+        //         "migrationsDir": "migration"
+        //     }
 
-    }).then(async (_) => {
+    ).then(async (_) => {
         console.log("Connected To PSQL")
-        // await Joined.delete({})
-        // await Message.delete({})
-        // await Room.delete({})
-        // await User.delete({})
+        await Joined.delete({})
+        await Message.delete({})
+        await Room.delete({})
+        await User.delete({})
     }).catch(error => console.log(error));
 })();
 
 
-// Parser MiddleWare
-app.use(express.json())
-app.use(express.urlencoded({ extended: false }));
+// // Parser MiddleWare
+app.use(express.json() as RequestHandler)
+app.use(express.urlencoded({ extended: false }) as RequestHandler );
 
 
 // SocketsINIT

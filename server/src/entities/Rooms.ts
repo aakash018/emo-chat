@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, BaseEntity, OneToMany } from "typeorm";
 import { Joined } from "./Joined";
-import { Message } from "./message";
+import { Message } from "./Message";
 
 
 @Entity()

@@ -5,7 +5,7 @@ import { validateUser } from "../utils/verifyUser";
 
 import { Joined } from "../entities/Joined";
 import { User } from "../entities/Users";
-import { Message } from "../entities/message";
+import { Message } from "../entities/Message";
 
 
 const route = express()

@@ -6,5 +6,9 @@ declare namespace NodeJS {
     GOOGLE_CLIENT_ID: string;
     GOODLE_CLIENT_SECRET: string;
     SERVER_END_POINT: string;
+    POSTGRESS_USER: string;
+    POSTGRESS_PASSWORD: string;
+    POSTGRESS_DATABASE: string;
+    POSTGRESS_HOST: string;
   }
 }
