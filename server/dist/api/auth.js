@@ -32,7 +32,6 @@ route.get('/google/callback', passport_1.default.authenticate('google', {
         res.cookie("ref", json_generator_1.createRefToken({ userID: currentUser === null || currentUser === void 0 ? void 0 : currentUser.id }), {
             httpOnly: true,
             maxAge: 1000 * 60 * 60 * 24 * 7,
-            secure: false
         });
         res.redirect(`${process.env.CLIENT_END_POINT}/dash`);
     }

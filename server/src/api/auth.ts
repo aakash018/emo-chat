@@ -28,7 +28,6 @@ route.get('/google/callback',
             res.cookie("ref", createRefToken({ userID: currentUser?.id }), {
                 httpOnly: true,
                 maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
-                secure: false
             })
             res.redirect(`${process.env.CLIENT_END_POINT}/dash`)
         }
