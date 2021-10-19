@@ -29,7 +29,7 @@ const Rooms_1 = require("./entities/Rooms");
 const Users_1 = require("./entities/Users");
 const onlineClients_1 = require("./onlineClients");
 const app = express_1.default();
-app.set('trust proxy', 1);
+app.enable("trust proxy");
 app.use(cookie_parser_1.default());
 app.use(cors_1.default({
     origin: process.env.CLIENT_END_POINT,

@@ -24,7 +24,8 @@ import { addOnlienClients, getOnlineClients, removeOnlineClient } from "./online
 
 
 const app = express()
-app.set('trust proxy', 1)
+// app.set('trust proxy', 1)
+app.enable("trust proxy")
 app.use(cookieParser())
 app.use(cors({
     origin: process.env.CLIENT_END_POINT,
