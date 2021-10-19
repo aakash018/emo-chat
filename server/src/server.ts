@@ -25,10 +25,12 @@ import { addOnlienClients, getOnlineClients, removeOnlineClient } from "./online
 
 const app = express()
 app.use(cookieParser())
+app.set("trust proxy", 1);
 app.use(cors({
     origin: process.env.CLIENT_END_POINT,
     credentials: true
 }))
+
 const server = http.createServer(app);
 const PORT = process.env.PORT || 5000;
 
@@ -63,7 +65,6 @@ const PORT = process.env.PORT || 5000;
 
 
 // Parser MiddleWare
-app.set("trust proxy", 1)
 app.use(express.json() as RequestHandler)
 app.use(express.urlencoded({ extended: false }) as RequestHandler );
 
