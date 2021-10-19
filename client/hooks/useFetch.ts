@@ -21,7 +21,7 @@ export const useFetch = async <T>(
     }
 
     if (method === "POST") {
-        res = await axios.post(`http://localhost:5000/${path}`, data,
+        res = await axios.post(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/${path}`, data,
             {
                 headers: {
                     "Authorization": `Bearer ${localStorage.getItem("token")}`

@@ -49,7 +49,7 @@ const Room: React.FC = ({ }) => {
                     socket.emit("user-loged-on", { userID: currentUser.id })
 
                     /// ? TO CHECK IF ROO IS ALREADY JOINED
-                    const res = await axios.post("http://localhost:5000/api/room/joinRoom", { roomID: id }, {
+                    const res = await axios.post(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/room/joinRoom`, { roomID: id }, {
                         headers: {
                             "Authorization": `Bearer ${localStorage.getItem("token")}`
                         }
