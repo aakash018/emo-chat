@@ -24,7 +24,8 @@ route.get('/google/callback',
         if (req.user) {
             const currentUser = await User.findOne({ where: { email: (req.user as any).email } })
             // console.log(currentUser)
-            res.clearCookie("ref")
+            // res.clearCookie("ref")
+            console.log("COOKIE IS BEING SENT")
             res.cookie("ref", createRefToken({ userID: currentUser?.id }), {
                 httpOnly: true,
                 maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
