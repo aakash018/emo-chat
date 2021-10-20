@@ -28,7 +28,7 @@ route.get('/google/callback', passport_1.default.authenticate('google', {
 }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (req.user) {
         const currentUser = yield Users_1.User.findOne({ where: { email: req.user.email } });
-        res.clearCookie("ref");
+        console.log("COOKIE IS BEING SENT");
         res.cookie("ref", json_generator_1.createRefToken({ userID: currentUser === null || currentUser === void 0 ? void 0 : currentUser.id }), {
             httpOnly: true,
             maxAge: 1000 * 60 * 60 * 24 * 7,
