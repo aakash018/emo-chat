@@ -30,7 +30,8 @@ route.get('/google/callback',
                 httpOnly: true,
                 maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
                 sameSite: "none",
-                secure: true
+                secure: true,
+                domain: "https://emo-chat.vercel.app/"
             })
             res.redirect(`${process.env.CLIENT_END_POINT}/dash`)
         }

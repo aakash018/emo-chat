@@ -33,7 +33,8 @@ route.get('/google/callback', passport_1.default.authenticate('google', {
             httpOnly: true,
             maxAge: 1000 * 60 * 60 * 24 * 7,
             sameSite: "none",
-            secure: true
+            secure: true,
+            domain: "https://emo-chat.vercel.app/"
         });
         res.redirect(`${process.env.CLIENT_END_POINT}/dash`);
     }
